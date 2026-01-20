@@ -34,7 +34,7 @@ const LoginScreen = ({ navigation }) => {
         password,
       });
 
-      await login(res.data.token);
+      await login(res.data);
     } catch (err) {
       ToastAndroid.show(
         err.response?.data?.message || 'Invalid credentials',
