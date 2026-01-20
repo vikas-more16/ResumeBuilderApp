@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AuthNavigation from './AuthNavigation';
-import BottomTab from './BottomTab';
 import { AuthContext } from '../context/AuthContext';
+import AppStack from './AppStack';
 
 const RootNavigation = () => {
   const { userToken, loading } = useContext(AuthContext);
@@ -11,7 +11,7 @@ const RootNavigation = () => {
 
   return (
     <NavigationContainer>
-      {userToken ? <BottomTab /> : <AuthNavigation />}
+      {userToken ? <AppStack /> : <AuthNavigation />}
     </NavigationContainer>
   );
 };
