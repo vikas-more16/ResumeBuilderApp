@@ -11,6 +11,7 @@ import DegreeCertificates from '../screens/DegreeCertificates';
 import Badges from '../screens/Badges';
 import Transcripts from '../screens/Transcripts';
 import WorkCredentials from '../screens/WorkCredentials';
+import ResumePreview from '../screens/ResumePreview';
 
 const Stack = createNativeStackNavigator();
 
@@ -63,6 +64,11 @@ const AppStack = () => {
         name="WorkCredentials"
         component={WorkCredentials}
         options={{ title: 'WorkCredentials' }}
+      />
+      <Stack.Screen
+        name="ResumePreview"
+        component={ResumePreview}
+        options={{ title: 'ResumePreview' }}
       />
     </Stack.Navigator>
   );
