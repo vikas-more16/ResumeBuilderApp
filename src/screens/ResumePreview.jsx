@@ -18,12 +18,12 @@ const ResumePreview = ({ route }) => {
         fileName: (data.name || 'resume').replace(/\s+/g, '_'),
         directory: 'Documents',
       };
-
-      console.log('PDF options:', options);
-
       const file = await generatePDF(options);
 
-      console.log('PDF file:', file.filePath);
+      const newPath = `${RNFS.DownloadDirectoryPath}/yash.pdf`;
+      console.log(newPath);
+
+      await RNFS.copyFile(file.filePath, newPath);
 
       alert('PDF saved successfully');
     } catch (error) {
