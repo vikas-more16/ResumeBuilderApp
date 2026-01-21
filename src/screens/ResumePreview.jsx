@@ -1,10 +1,36 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { generatePDF } from 'react-native-html-to-pdf';
+import RNFS from 'react-native-fs';
+import { resumeHTML } from '../utils/resumeTemplate';
 
 const ResumePreview = ({ route }) => {
   const { resume } = route.params;
   const data = resume.data;
+
+  const downloadPDF = async () => {
+    try {
+      const html = resumeHTML(data);
+
+      const options = {
+        html,
+        fileName: (data.name || 'resume').replace(/\s+/g, '_'),
+        directory: 'Documents',
+      };
+
+      console.log('PDF options:', options);
+
+      const file = await generatePDF(options);
+
+      console.log('PDF file:', file.filePath);
+
+      alert('PDF saved successfully');
+    } catch (error) {
+      console.log('PDF ERROR:', error);
+      alert('Failed to generate PDF');
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -23,10 +49,7 @@ const ResumePreview = ({ route }) => {
       </View>
 
       {/* ================= ACTION BUTTON ================= */}
-      <TouchableOpacity
-        style={styles.downloadBtn}
-        onPress={() => alert('PDF download coming soon')}
-      >
+      <TouchableOpacity style={styles.downloadBtn} onPress={downloadPDF}>
         <Text style={styles.downloadText}>Download PDF</Text>
       </TouchableOpacity>
     </SafeAreaView>
