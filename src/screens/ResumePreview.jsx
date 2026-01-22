@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { generatePDF } from 'react-native-html-to-pdf';
 import RNFS from 'react-native-fs';
+import FileViewer from 'react-native-file-viewer';
 import { resumeHTML } from '../utils/resumeTemplate';
 
 const ResumePreview = ({ route }) => {
@@ -19,13 +20,10 @@ const ResumePreview = ({ route }) => {
         directory: 'Documents',
       };
       const file = await generatePDF(options);
-
       const newPath = `${RNFS.DownloadDirectoryPath}/yash.pdf`;
-      console.log(newPath);
-
       await RNFS.copyFile(file.filePath, newPath);
-
       alert('PDF saved successfully');
+      await FileViewer.open(newPath);
     } catch (error) {
       console.log('PDF ERROR:', error);
       alert('Failed to generate PDF');
