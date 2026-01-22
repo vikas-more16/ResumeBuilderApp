@@ -8,40 +8,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateResume, saveResume } from '../redux/actions/resume.actions';
+
 const Truresume = () => {
   const [step, setStep] = useState(1);
+  const dispatch = useDispatch();
 
-  const [resume, setResume] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    location: '',
-    linkedin: '',
-    github: '',
-    summary: '',
-  });
-
-  const saveResume = async () => {
-    try {
-      const stored = await AsyncStorage.getItem('@my_resumes');
-      const resumes = stored ? JSON.parse(stored) : [];
-
-      const newResume = {
-        id: Date.now().toString(),
-        title: resume.name || 'Untitled Resume',
-        createdAt: new Date().toISOString().split('T')[0],
-        data: resume,
-      };
-
-      resumes.push(newResume);
-
-      await AsyncStorage.setItem('@my_resumes', JSON.stringify(resumes));
-      alert('Resume saved to My Drive');
-    } catch (err) {
-      alert('Failed to save resume');
-    }
-  };
+  const resume = useSelector(state => state.resume.currentResume);
+  const loading = useSelector(state => state.resume.loading);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -77,42 +52,46 @@ const Truresume = () => {
                 placeholder="Full Name"
                 style={styles.input}
                 value={resume.name}
-                onChangeText={text => setResume({ ...resume, name: text })}
+                onChangeText={text => dispatch(updateResume({ name: text }))}
               />
 
               <TextInput
                 placeholder="Email"
                 style={styles.input}
                 value={resume.email}
-                onChangeText={text => setResume({ ...resume, email: text })}
+                onChangeText={text => dispatch(updateResume({ email: text }))}
               />
 
               <TextInput
                 placeholder="Phone"
                 style={styles.input}
                 value={resume.phone}
-                onChangeText={text => setResume({ ...resume, phone: text })}
+                onChangeText={text => dispatch(updateResume({ phone: text }))}
               />
 
               <TextInput
                 placeholder="Location"
                 style={styles.input}
                 value={resume.location}
-                onChangeText={text => setResume({ ...resume, location: text })}
+                onChangeText={text =>
+                  dispatch(updateResume({ location: text }))
+                }
               />
 
               <TextInput
                 placeholder="LinkedIn URL"
                 style={styles.input}
                 value={resume.linkedin}
-                onChangeText={text => setResume({ ...resume, linkedin: text })}
+                onChangeText={text =>
+                  dispatch(updateResume({ linkedin: text }))
+                }
               />
 
               <TextInput
                 placeholder="GitHub URL"
                 style={styles.input}
                 value={resume.github}
-                onChangeText={text => setResume({ ...resume, github: text })}
+                onChangeText={text => dispatch(updateResume({ github: text }))}
               />
             </>
           )}
@@ -123,12 +102,14 @@ const Truresume = () => {
               style={[styles.input, { height: 120 }]}
               multiline
               value={resume.summary}
-              onChangeText={text => setResume({ ...resume, summary: text })}
+              onChangeText={text => dispatch(updateResume({ summary: text }))}
             />
           )}
 
           {step === 3 && (
-            <Text style={styles.reviewText}>Review your resume.</Text>
+            <Text style={styles.reviewText}>
+              Review your resume and save it.
+            </Text>
           )}
         </View>
 
@@ -151,9 +132,16 @@ const Truresume = () => {
               <Text style={{ color: '#fff' }}>Next</Text>
             </TouchableOpacity>
           )}
+
           {step === 3 && (
-            <TouchableOpacity style={styles.primaryBtn} onPress={saveResume}>
-              <Text style={{ color: '#fff' }}>Save Resume</Text>
+            <TouchableOpacity
+              style={styles.primaryBtn}
+              onPress={() => dispatch(saveResume())}
+              disabled={loading}
+            >
+              <Text style={{ color: '#fff' }}>
+                {loading ? 'Saving...' : 'Save Resume'}
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -186,7 +174,6 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
   },
-
   preview: {
     backgroundColor: '#fff',
     padding: 16,
@@ -209,7 +196,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 4,
   },
-
   stepHeader: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -224,25 +210,21 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     marginBottom: 4,
   },
-
   builder: {
     backgroundColor: '#fff',
     padding: 16,
     borderRadius: 12,
   },
-
   input: {
     backgroundColor: '#f9fafb',
     padding: 12,
     borderRadius: 10,
     marginBottom: 12,
   },
-
   reviewText: {
     textAlign: 'center',
     fontSize: 14,
   },
-
   navButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',

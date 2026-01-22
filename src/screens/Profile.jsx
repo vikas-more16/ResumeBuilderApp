@@ -2,10 +2,16 @@ import { useContext } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { AuthContext } from '../context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser } from '../redux/actions/auth.actions';
 
 const Profile = () => {
-  const { user, logout } = useContext(AuthContext);
+  const user = useSelector(state => state.auth.user);
+  console.log(user);
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -17,14 +23,14 @@ const Profile = () => {
 
       {/* Profile Card */}
       <View style={styles.card}>
-        <ProfileItem icon="card" label="User ID" value={user?.userId} />
+        <ProfileItem icon="card" label="User ID" value={user?.id} />
         <ProfileItem icon="person" label="Username" value={user?.username} />
         <ProfileItem icon="mail" label="Email" value={user?.email} />
         <ProfileItem icon="call" label="Phone" value={user?.phone} />
       </View>
 
       {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutBtn} onPress={logout}>
+      <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
         <Ionicons name="log-out" size={22} color="#fff" />
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>

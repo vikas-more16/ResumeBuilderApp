@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useContext } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { AuthContext } from '../context/AuthContext';
-import React from 'react';
+import { useSelector } from 'react-redux';
 
 const HomeHeader = ({ navigation }) => {
-  const { user } = useContext(AuthContext);
+  const user = useSelector(state => state.auth.user);
   return (
     <View style={styles.header}>
       <View style={styles.leftHeader}>

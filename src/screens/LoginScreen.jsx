@@ -1,48 +1,21 @@
-import React, { useContext, useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  ToastAndroid,
-} from 'react-native';
-import axios from 'axios';
-import { AuthContext } from '../context/AuthContext';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { loginUser } from '../redux/actions/auth.actions';
 
 const LoginScreen = ({ navigation }) => {
-  const { login } = useContext(AuthContext);
-
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector(state => state.auth);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     if (!username || !password) {
-      ToastAndroid.show(
-        'Please enter username and password',
-        ToastAndroid.SHORT,
-      );
+      Alert.alert('Please enter username and password');
       return;
     }
 
-    try {
-      setLoading(true);
-
-      const res = await axios.post('http://192.168.56.1:5000/api/user/login', {
-        username,
-        password,
-      });
-
-      await login(res.data);
-    } catch (err) {
-      ToastAndroid.show(
-        err.response?.data?.message || 'Invalid credentials',
-        ToastAndroid.SHORT,
-      );
-    } finally {
-      setLoading(false);
-    }
+    dispatch(loginUser({ username, password }));
   };
 
   return (

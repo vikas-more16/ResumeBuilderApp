@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { generatePDF } from 'react-native-html-to-pdf';
@@ -20,10 +19,24 @@ const ResumePreview = ({ route }) => {
         directory: 'Documents',
       };
       const file = await generatePDF(options);
-      const newPath = `${RNFS.DownloadDirectoryPath}/yash.pdf`;
+
+      const fileName = `${data.name || 'resume'}`.replace(/\s+/g, '_');
+      const newPath = `${RNFS.DownloadDirectoryPath}/${fileName}.pdf`;
+
       await RNFS.copyFile(file.filePath, newPath);
+
       alert('PDF saved successfully');
-      await FileViewer.open(newPath);
+      console.log(newPath);
+
+      try {
+        await FileViewer.open(newPath, {
+          showOpenWithDialog: true,
+          mimeType: 'application/pdf',
+        });
+      } catch (error) {
+        console.log('PDF OPEN ERROR:', error);
+        alert(error?.message || 'Unable to open PDF');
+      }
     } catch (error) {
       console.log('PDF ERROR:', error);
       alert('Failed to generate PDF');
@@ -32,7 +45,6 @@ const ResumePreview = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* ================= PREVIEW CARD ================= */}
       <View style={styles.preview}>
         <Text style={styles.name}>{data.name}</Text>
 
@@ -46,7 +58,6 @@ const ResumePreview = ({ route }) => {
         <Text style={styles.text}>{data.summary}</Text>
       </View>
 
-      {/* ================= ACTION BUTTON ================= */}
       <TouchableOpacity style={styles.downloadBtn} onPress={downloadPDF}>
         <Text style={styles.downloadText}>Download PDF</Text>
       </TouchableOpacity>

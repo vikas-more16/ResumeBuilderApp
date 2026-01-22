@@ -1,17 +1,23 @@
-import { useContext } from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import AuthNavigation from './AuthNavigation';
-import { AuthContext } from '../context/AuthContext';
 import AppStack from './AppStack';
+import { loadAuthFromStorage } from '../redux/actions/auth.actions';
 
 const RootNavigation = () => {
-  const { userToken, loading } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const { isLoggedIn, loading } = useSelector(state => state.auth);
+
+  useEffect(() => {
+    dispatch(loadAuthFromStorage());
+  }, []);
 
   if (loading) return null;
 
   return (
     <NavigationContainer>
-      {userToken ? <AppStack /> : <AuthNavigation />}
+      {isLoggedIn ? <AppStack /> : <AuthNavigation />}
     </NavigationContainer>
   );
 };

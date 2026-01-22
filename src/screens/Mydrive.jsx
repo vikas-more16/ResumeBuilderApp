@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,44 +7,53 @@ import {
   StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchResumes } from '../redux/actions/resume.actions';
 
 const Mydrive = ({ navigation }) => {
-  const [resumes, setResumes] = useState([]);
+  const dispatch = useDispatch();
 
-  const loadResumes = async () => {
-    const data = await AsyncStorage.getItem('@my_resumes');
-    setResumes(data ? JSON.parse(data) : []);
-  };
+  const { savedResumes, loading } = useSelector(state => state.resume);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', loadResumes);
-    return unsubscribe;
-  }, [navigation]);
+    dispatch(fetchResumes());
+  }, [dispatch]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <FlatList
-          data={resumes}
-          keyExtractor={item => item.id}
-          ListEmptyComponent={
-            <Text style={styles.empty}>No resumes saved yet</Text>
-          }
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.card}
-              onPress={() =>
-                navigation.navigate('ResumePreview', {
-                  resume: item,
-                })
-              }
-            >
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.date}>Created on {item.createdAt}</Text>
-            </TouchableOpacity>
-          )}
-        />
+        {loading ? (
+          <Text style={styles.empty}>Loading resumes...</Text>
+        ) : (
+          <FlatList
+            data={savedResumes}
+            keyExtractor={item => item._id || item.id}
+            ListEmptyComponent={
+              <Text style={styles.empty}>No resumes saved yet</Text>
+            }
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.card}
+                onPress={() =>
+                  navigation.navigate('ResumePreview', {
+                    resume: item,
+                  })
+                }
+              >
+                <Text style={styles.title}>
+                  {item.title || item.name || 'Untitled Resume'}
+                </Text>
+
+                <Text style={styles.date}>
+                  Created on{' '}
+                  {item.createdAt
+                    ? new Date(item.createdAt).toDateString()
+                    : 'N/A'}
+                </Text>
+              </TouchableOpacity>
+            )}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
