@@ -20,10 +20,11 @@ export const saveResume = () => async (dispatch, getState) => {
     const { currentResume } = getState().resume;
 
     if (!token) throw new Error('No token in Redux');
+    console.log(`Bearer ${token}`);
 
     const res = await axios.post(API_URL, currentResume, {
       headers: {
-        Authorization: `"Bearer ${token}"`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
