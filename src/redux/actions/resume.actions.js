@@ -13,13 +13,13 @@ import { Platform } from 'react-native';
 
 /* ================= API URL ================= */
 // Emulator (local backend)
-const LOCAL_API = 'http://10.0.2.2:5000/api/resumes';
+// const API_URL = 'http://10.0.2.2:5000/api/resumes';
 
 // Production (Render)
-const PROD_API = 'https://resumebuilderappbakend.onrender.com/api/resumes';
+const API_URL = 'https://resumebuilderappbakend.onrender.com/api/resumes';
 
 // switch automatically
-const API_URL = __DEV__ ? LOCAL_API : PROD_API;
+// const API_URL = __DEV__ ? LOCAL_API : PROD_API;
 
 /* ================= SAVE RESUME ================= */
 export const saveResume = () => async (dispatch, getState) => {
