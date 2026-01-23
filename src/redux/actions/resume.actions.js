@@ -9,8 +9,17 @@ import {
   FETCH_RESUMES_FAILURE,
   UPDATE_CURRENT_RESUME,
 } from '../types/resume.types';
+import { Platform } from 'react-native';
 
-const API_URL = 'http://192.168.56.1:5000/api/resumes';
+/* ================= API URL ================= */
+// Emulator (local backend)
+const LOCAL_API = 'http://10.0.2.2:5000/api/resumes';
+
+// Production (Render)
+const PROD_API = 'https://resumebuilderappbakend.onrender.com/api/resumes';
+
+// switch automatically
+const API_URL = __DEV__ ? LOCAL_API : PROD_API;
 
 /* ================= SAVE RESUME ================= */
 export const saveResume = () => async (dispatch, getState) => {
@@ -24,42 +33,35 @@ export const saveResume = () => async (dispatch, getState) => {
 
     const headers = {
       Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json', // 🔥 REQUIRED
+    };
+
+    const payload = {
+      data: {
+        name: currentResume.name,
+        email: currentResume.email,
+        phone: currentResume.phone,
+        location: currentResume.location,
+        linkedin: currentResume.linkedin,
+        github: currentResume.github,
+        summary: currentResume.summary,
+      },
     };
 
     let res;
 
     if (currentResume._id) {
-      res = await axios.put(
-        `${API_URL}/update/${currentResume._id}`,
-        {
-          data: {
-            name: currentResume.name,
-            email: currentResume.email,
-            phone: currentResume.phone,
-            location: currentResume.location,
-            linkedin: currentResume.linkedin,
-            github: currentResume.github,
-            summary: currentResume.summary,
-          },
-        },
-        { headers },
-      );
+      // UPDATE
+      res = await axios.put(`${API_URL}/update/${currentResume._id}`, payload, {
+        headers,
+        timeout: 20000,
+      });
     } else {
-      res = await axios.post(
-        `${API_URL}/create`,
-        {
-          data: {
-            name: currentResume.name,
-            email: currentResume.email,
-            phone: currentResume.phone,
-            location: currentResume.location,
-            linkedin: currentResume.linkedin,
-            github: currentResume.github,
-            summary: currentResume.summary,
-          },
-        },
-        { headers },
-      );
+      // CREATE
+      res = await axios.post(`${API_URL}/create`, payload, {
+        headers,
+        timeout: 20000,
+      });
     }
 
     dispatch({
@@ -67,10 +69,14 @@ export const saveResume = () => async (dispatch, getState) => {
       payload: res.data,
     });
   } catch (error) {
-    console.log('SAVE RESUME ERROR:', error.response?.data || error.message);
+    console.log('SAVE RESUME ERROR FULL:', {
+      message: error.message,
+      response: error.response?.data,
+    });
+
     dispatch({
       type: SAVE_RESUME_FAILURE,
-      payload: error.response?.data?.message || 'Save failed',
+      payload: error.response?.data?.message || error.message || 'Save failed',
     });
   }
 };
@@ -87,6 +93,7 @@ export const fetchResumes = () => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      timeout: 20000,
     });
 
     dispatch({
@@ -95,6 +102,7 @@ export const fetchResumes = () => async (dispatch, getState) => {
     });
   } catch (error) {
     console.log('FETCH RESUME ERROR:', error.response?.data || error.message);
+
     dispatch({
       type: FETCH_RESUMES_FAILURE,
       payload: error.response?.data?.message || 'Fetch failed',
@@ -108,6 +116,7 @@ export const updateResume = payload => ({
   payload,
 });
 
+/* ================= SET CURRENT RESUME ================= */
 export const setCurrentResume = resume => ({
   type: SET_CURRENT_RESUME,
   payload: {

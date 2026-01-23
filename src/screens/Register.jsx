@@ -16,7 +16,10 @@ export default function Register({ navigation }) {
     }
 
     try {
-      await axios.post('http://192.168.56.1:5000/api/user/register', form);
+      await axios.post(
+        'https://resumebuilderappbakend.onrender.com/api/user/register',
+        form,
+      );
 
       Alert.alert('Success', 'Registered successfully', [
         { text: 'OK', onPress: () => navigation.goBack() },

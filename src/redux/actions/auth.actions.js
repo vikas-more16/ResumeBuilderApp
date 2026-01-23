@@ -32,7 +32,7 @@ export const loginUser = credentials => async dispatch => {
     dispatch({ type: AUTH_LOGIN_REQUEST });
 
     const res = await axios.post(
-      'http://192.168.56.1:5000/api/user/login',
+      'https://resumebuilderappbakend.onrender.com/api/user/login',
       credentials,
     );
 
