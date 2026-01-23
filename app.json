@@ -1,4 +1,5 @@
 {
   "name": "resumebuilderapp",
+  "plugins": ["@notifee/react-native"],
   "displayName": "resumebuilderapp"
 }

@@ -18,7 +18,6 @@ const MyResumes = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const { savedResumes, loading } = useSelector(state => state.resume);
-  console.log(savedResumes?.[0]?._id);
 
   useEffect(() => {
     dispatch(fetchResumes());

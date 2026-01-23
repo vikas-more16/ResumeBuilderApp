@@ -1,49 +1,13 @@
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { generatePDF } from 'react-native-html-to-pdf';
-import RNFS from 'react-native-fs';
-import FileViewer from 'react-native-file-viewer';
-import { resumeHTML } from '../utils/resumeTemplate';
 import { setCurrentResume } from '../redux/actions/resume.actions';
 import { useDispatch } from 'react-redux';
+import DownloadResumeButton from '../components/DownloadResumeButton';
 
 const ResumePreview = ({ route, navigation }) => {
   const dispatch = useDispatch();
   const { resume } = route.params;
   const data = resume.data;
-  const downloadPDF = async () => {
-    try {
-      const html = resumeHTML(data);
-
-      const options = {
-        html,
-        fileName: (data.name || 'resume').replace(/\s+/g, '_'),
-        directory: 'Documents',
-      };
-      const file = await generatePDF(options);
-
-      const fileName = `${data.name || 'resume'}`.replace(/\s+/g, '_');
-      const newPath = `${RNFS.DownloadDirectoryPath}/${fileName}.pdf`;
-
-      await RNFS.copyFile(file.filePath, newPath);
-
-      alert('PDF saved successfully');
-      console.log(newPath);
-
-      try {
-        await FileViewer.open(newPath, {
-          showOpenWithDialog: true,
-          mimeType: 'application/pdf',
-        });
-      } catch (error) {
-        console.log('PDF OPEN ERROR:', error);
-        alert(error?.message || 'Unable to open PDF');
-      }
-    } catch (error) {
-      console.log('PDF ERROR:', error);
-      alert('Failed to generate PDF');
-    }
-  };
   const handleEdit = () => {
     dispatch(setCurrentResume(resume));
     navigation.navigate('Truresume');
@@ -64,11 +28,9 @@ const ResumePreview = ({ route, navigation }) => {
         <Text style={styles.text}>{data.summary}</Text>
       </View>
       <TouchableOpacity style={styles.editBtn} onPress={handleEdit}>
-        <Text style={styles.downloadText}>Edit Resume</Text>
+        <Text style={styles.editText}>Edit Resume</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.downloadBtn} onPress={downloadPDF}>
-        <Text style={styles.downloadText}>Download PDF</Text>
-      </TouchableOpacity>
+      <DownloadResumeButton data={data} />
     </SafeAreaView>
   );
 };
@@ -115,15 +77,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
   },
-  downloadBtn: {
-    marginTop: 20,
-    backgroundColor: '#2563eb',
-    padding: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-
-  downloadText: {
+  editText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
