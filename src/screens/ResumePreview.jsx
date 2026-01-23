@@ -4,11 +4,13 @@ import { generatePDF } from 'react-native-html-to-pdf';
 import RNFS from 'react-native-fs';
 import FileViewer from 'react-native-file-viewer';
 import { resumeHTML } from '../utils/resumeTemplate';
+import { setCurrentResume } from '../redux/actions/resume.actions';
+import { useDispatch } from 'react-redux';
 
-const ResumePreview = ({ route }) => {
+const ResumePreview = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const { resume } = route.params;
   const data = resume.data;
-
   const downloadPDF = async () => {
     try {
       const html = resumeHTML(data);
@@ -42,6 +44,10 @@ const ResumePreview = ({ route }) => {
       alert('Failed to generate PDF');
     }
   };
+  const handleEdit = () => {
+    dispatch(setCurrentResume(resume));
+    navigation.navigate('Truresume');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -57,7 +63,9 @@ const ResumePreview = ({ route }) => {
         <Text style={styles.section}>Summary</Text>
         <Text style={styles.text}>{data.summary}</Text>
       </View>
-
+      <TouchableOpacity style={styles.editBtn} onPress={handleEdit}>
+        <Text style={styles.downloadText}>Edit Resume</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.downloadBtn} onPress={downloadPDF}>
         <Text style={styles.downloadText}>Download PDF</Text>
       </TouchableOpacity>
@@ -100,7 +108,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 4,
   },
-
+  editBtn: {
+    marginTop: 20,
+    backgroundColor: '#2563eb',
+    padding: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
   downloadBtn: {
     marginTop: 20,
     backgroundColor: '#2563eb',

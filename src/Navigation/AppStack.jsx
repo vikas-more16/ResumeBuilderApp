@@ -12,6 +12,7 @@ import Badges from '../screens/Badges';
 import Transcripts from '../screens/Transcripts';
 import WorkCredentials from '../screens/WorkCredentials';
 import ResumePreview from '../screens/ResumePreview';
+import MyResumes from '../screens/MyResumes';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,11 @@ const AppStack = () => {
         name="Truresume"
         component={Truresume}
         options={{ title: 'Truresume' }}
+      />
+      <Stack.Screen
+        name="MyResumes"
+        component={MyResumes}
+        options={{ title: 'MyResumes' }}
       />
       <Stack.Screen
         name="DegreeCertificates"

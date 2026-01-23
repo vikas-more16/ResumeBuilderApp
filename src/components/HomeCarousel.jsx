@@ -15,7 +15,7 @@ const DATA = [
     title: 'Build Your Resume',
     subtitle: 'Create professional resumes in minutes',
     bg: '#337cc1',
-    navigation: 'Truresume',
+    navigation: 'MyResumes',
   },
   {
     title: 'Check ATS Score',
