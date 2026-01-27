@@ -89,6 +89,7 @@ const Truresume = () => {
 
               <TextInput
                 placeholder="GitHub URL"
+                multiline
                 style={styles.input}
                 value={resume.github}
                 onChangeText={text => dispatch(updateResume({ github: text }))}

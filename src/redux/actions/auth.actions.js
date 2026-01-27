@@ -27,23 +27,26 @@ export const loadAuthFromStorage = () => async dispatch => {
   }
 };
 
-export const loginUser = credentials => async dispatch => {
+export const logoutUser = () => async dispatch => {
+  await AsyncStorage.removeItem('@auth');
+  dispatch({ type: AUTH_LOGOUT });
+};
+
+export const loginUserWithFirebase = firebaseToken => async dispatch => {
   try {
     dispatch({ type: AUTH_LOGIN_REQUEST });
 
     const res = await axios.post(
-      'https://resumebuilderappbakend.onrender.com/api/user/login',
-      credentials,
+      'http://10.0.2.2:5000/api/user/firebase-auth/login',
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${firebaseToken}`,
+        },
+      },
     );
 
-    const { token, UserId, username, email, phone } = res.data;
-
-    const user = {
-      id: UserId,
-      username,
-      email: email,
-      phone,
-    };
+    const { token, user } = res.data;
 
     await AsyncStorage.setItem('@auth', JSON.stringify({ token, user }));
 
@@ -54,12 +57,10 @@ export const loginUser = credentials => async dispatch => {
   } catch (error) {
     dispatch({
       type: AUTH_LOGIN_FAILURE,
-      payload: error.response?.data?.message || 'Login failed',
+      payload:
+        error.response?.data?.message ||
+        error.message ||
+        'Firebase login failed',
     });
   }
-};
-
-export const logoutUser = () => async dispatch => {
-  await AsyncStorage.removeItem('@auth');
-  dispatch({ type: AUTH_LOGOUT });
 };

@@ -1,32 +1,59 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { loginUser } from '../redux/actions/auth.actions';
+import {
+  firebaseGoogleLogin,
+  firebaseLogin,
+  getFirebaseToken,
+} from '../firebase/auth.js';
+import { loginUserWithFirebase } from '../redux/actions/auth.actions';
 
-const LoginScreen = ({ navigation }) => {
+export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
   const { loading, error } = useSelector(state => state.auth);
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    if (!username || !password) {
-      Alert.alert('Please enter username and password');
-      return;
-    }
+  const handleGoogleLogin = async () => {
+    try {
+      await firebaseGoogleLogin();
 
-    dispatch(loginUser({ username, password }));
+      const firebaseToken = await getFirebaseToken();
+      dispatch(loginUserWithFirebase(firebaseToken));
+    } catch (e) {
+      console.error('❌ GOOGLE LOGIN ERROR FULL:', {
+        error,
+        type: typeof error,
+        keys: error && Object.keys(error),
+      });
+
+      throw error;
+    }
   };
 
+  const handleLogin = async () => {
+    try {
+      await firebaseLogin(email, password);
+
+      const firebaseToken = await getFirebaseToken();
+
+      dispatch(loginUserWithFirebase(firebaseToken));
+    } catch (e) {
+      Alert.alert('Login failed', e.message);
+    }
+  };
   return (
-    <View style={styles.container}>
+    <View style={styles.container} pointerEvents="auto">
       <Text style={styles.title}>Login</Text>
 
       <TextInput
-        placeholder="Username"
+        placeholder="Email"
+        editable={true}
+        // secureTextEntry
+        showSoftInputOnFocus={true}
         style={styles.input}
-        value={username}
-        onChangeText={setUsername}
+        value={email}
+        onChangeText={setEmail}
       />
 
       <TextInput
@@ -42,15 +69,14 @@ const LoginScreen = ({ navigation }) => {
         onPress={handleLogin}
         disabled={loading}
       />
+      <Button title="Login with Google" onPress={handleGoogleLogin} />
 
       <Text style={styles.link} onPress={() => navigation.navigate('register')}>
         Create Account
       </Text>
     </View>
   );
-};
-
-export default LoginScreen;
+}
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', padding: 20 },

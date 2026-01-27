@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Text, Alert } from 'react-native';
 import axios from 'axios';
+import { firebaseRegister, getFirebaseToken } from '../firebase/auth';
 
 export default function Register({ navigation }) {
   const [form, setForm] = useState({
@@ -11,27 +12,29 @@ export default function Register({ navigation }) {
   });
 
   const handleRegister = async () => {
-    if (!form.username || !form.email || !form.phone || !form.password) {
-      return Alert.alert('Error', 'All fields are required');
-    }
+    const { username, email, phone, password } = form;
 
     try {
+      await firebaseRegister(email, password);
+
+      const firebaseToken = await getFirebaseToken();
+
       await axios.post(
-        'https://resumebuilderappbakend.onrender.com/api/user/register',
-        form,
+        'http://10.0.2.2:5000/api/user/firebase-auth/register ',
+        { username, phone },
+        {
+          headers: {
+            Authorization: `Bearer ${firebaseToken}`,
+          },
+        },
       );
 
-      Alert.alert('Success', 'Registered successfully', [
-        { text: 'OK', onPress: () => navigation.goBack() },
-      ]);
+      Alert.alert('Success', 'Registered successfully');
+      navigation.goBack();
     } catch (err) {
-      Alert.alert(
-        'Registration Failed',
-        err.response?.data?.message || 'Something went wrong',
-      );
+      Alert.alert('Error', err.message);
     }
   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
@@ -53,7 +56,7 @@ export default function Register({ navigation }) {
       />
       <TextInput
         placeholder="Password"
-        secureTextEntry
+        // secureTextEntry
         style={styles.input}
         onChangeText={v => setForm({ ...form, password: v })}
       />
