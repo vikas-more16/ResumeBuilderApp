@@ -13,10 +13,10 @@ import { Platform } from 'react-native';
 
 /* ================= API URL ================= */
 // Emulator (local backend)
-// const API_URL = 'http://10.0.2.2:5000/api/resumes';
+const API_URL = 'http://10.0.2.2:5000/api/resumes';
 
 // Production (Render)
-const API_URL = 'https://resumebuilderappbakend.onrender.com/api/resumes';
+// const API_URL = 'https://resumebuilderappbakend.onrender.com/api/resumes';
 
 // switch automatically
 // const API_URL = __DEV__ ? LOCAL_API : PROD_API;

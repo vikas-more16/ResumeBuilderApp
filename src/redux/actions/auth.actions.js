@@ -6,6 +6,8 @@ import {
   AUTH_LOGIN_FAILURE,
   AUTH_LOGOUT,
 } from '../types/auth.types';
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 export const loadAuthFromStorage = () => async dispatch => {
   try {
@@ -28,8 +30,16 @@ export const loadAuthFromStorage = () => async dispatch => {
 };
 
 export const logoutUser = () => async dispatch => {
-  await AsyncStorage.removeItem('@auth');
-  dispatch({ type: AUTH_LOGOUT });
+  try {
+    await GoogleSignin.signOut();
+    await auth().signOut();
+    await AsyncStorage.removeItem('@auth');
+
+    dispatch({ type: AUTH_LOGOUT });
+  } catch (error) {
+    console.log('Logout error (safe):', error?.message);
+    dispatch({ type: AUTH_LOGOUT });
+  }
 };
 
 export const loginUserWithFirebase = firebaseToken => async dispatch => {

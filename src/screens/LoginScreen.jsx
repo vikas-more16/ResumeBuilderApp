@@ -19,15 +19,14 @@ export default function LoginScreen({ navigation }) {
       await firebaseGoogleLogin();
 
       const firebaseToken = await getFirebaseToken();
+
       dispatch(loginUserWithFirebase(firebaseToken));
     } catch (e) {
       console.error('❌ GOOGLE LOGIN ERROR FULL:', {
-        error,
-        type: typeof error,
-        keys: error && Object.keys(error),
+        message: e?.message,
+        code: e?.code,
+        stack: e?.stack,
       });
-
-      throw error;
     }
   };
 
@@ -49,7 +48,6 @@ export default function LoginScreen({ navigation }) {
       <TextInput
         placeholder="Email"
         editable={true}
-        // secureTextEntry
         showSoftInputOnFocus={true}
         style={styles.input}
         value={email}
