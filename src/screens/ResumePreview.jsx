@@ -1,36 +1,57 @@
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { setCurrentResume } from '../redux/actions/resume.actions';
-import { useDispatch } from 'react-redux';
+import axios from 'axios';
+import { WebView } from 'react-native-webview';
 import DownloadResumeButton from '../components/DownloadResumeButton';
+import { fusionResumeHTML } from '../utils/fusion.template';
 
-const ResumePreview = ({ route, navigation }) => {
-  const dispatch = useDispatch();
-  const { resume } = route.params;
-  const data = resume.data;
-  const handleEdit = () => {
-    dispatch(setCurrentResume(resume));
-    navigation.navigate('Truresume');
-  };
+const API_URL = 'http://10.0.2.2:5000/api/resumes';
+
+const ResumePreview = ({ route }) => {
+  const { resumeId } = route.params;
+
+  const [resume, setResume] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchResume = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/${resumeId}`);
+        setResume(res.data.resume);
+      } catch (error) {
+        Alert.alert('Error', 'Failed to load resume');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResume();
+  }, [resumeId]);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.center}>
+        <ActivityIndicator size="large" />
+      </SafeAreaView>
+    );
+  }
+
+  if (!resume) return null;
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.preview}>
-        <Text style={styles.name}>{data.name}</Text>
+      {/* ===== PREVIEW ===== */}
+      <WebView
+        originWhitelist={['*']}
+        source={{ html: fusionResumeHTML(resume) }}
+        style={styles.webview}
+      />
 
-        <Text style={styles.subText}>
-          {data.email} • {data.phone}
-        </Text>
-
-        <Text style={styles.subText}>{data.location}</Text>
-
-        <Text style={styles.section}>Summary</Text>
-        <Text style={styles.text}>{data.summary}</Text>
+      {/* ===== DOWNLOAD ===== */}
+      <View style={styles.footer}>
+        <DownloadResumeButton resumeId={resume._id} />
       </View>
-      <TouchableOpacity style={styles.editBtn} onPress={handleEdit}>
-        <Text style={styles.editText}>Edit Resume</Text>
-      </TouchableOpacity>
-      <DownloadResumeButton data={data} />
     </SafeAreaView>
   );
 };
@@ -41,45 +62,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f4f6f8',
-    padding: 16,
   },
 
-  preview: {
+  webview: {
+    flex: 1,
+  },
+
+  footer: {
+    padding: 16,
     backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
   },
 
-  name: {
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-
-  subText: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginTop: 2,
-  },
-
-  section: {
-    marginTop: 12,
-    fontWeight: 'bold',
-  },
-
-  text: {
-    fontSize: 13,
-    marginTop: 4,
-  },
-  editBtn: {
-    marginTop: 20,
-    backgroundColor: '#2563eb',
-    padding: 14,
-    borderRadius: 12,
+  center: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-  },
-  editText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });

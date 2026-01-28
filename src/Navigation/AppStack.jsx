@@ -13,6 +13,9 @@ import Transcripts from '../screens/Transcripts';
 import WorkCredentials from '../screens/WorkCredentials';
 import ResumePreview from '../screens/ResumePreview';
 import MyResumes from '../screens/MyResumes';
+import EditResume from '../screens/EditResume';
+import EditEducation from '../screens/EditEducation';
+import EducationForm from '../screens/EducationForm';
 
 const Stack = createNativeStackNavigator();
 
@@ -76,6 +79,13 @@ const AppStack = () => {
         component={ResumePreview}
         options={{ title: 'ResumePreview' }}
       />
+      <Stack.Screen
+        name="editResume"
+        component={EditResume}
+        options={{ title: 'editResume' }}
+      />
+      <Stack.Screen name="EditEducation" component={EditEducation} />
+      <Stack.Screen name="EducationForm" component={EducationForm} />
     </Stack.Navigator>
   );
 };

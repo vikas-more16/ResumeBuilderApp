@@ -1,25 +1,38 @@
 import {
-  UPDATE_CURRENT_RESUME,
-  SAVE_RESUME_REQUEST,
-  SAVE_RESUME_SUCCESS,
-  SAVE_RESUME_FAILURE,
+  SET_CURRENT_RESUME,
   FETCH_RESUMES_REQUEST,
   FETCH_RESUMES_SUCCESS,
   FETCH_RESUMES_FAILURE,
-  SET_CURRENT_RESUME,
+  UPDATE_TITLE_SUCCESS,
+  UPDATE_EDUCATION_REQUEST,
+  UPDATE_EDUCATION_SUCCESS,
+  UPDATE_EDUCATION_FAILURE,
 } from '../types/resume.types';
 
 const initialState = {
   currentResume: {
     _id: null,
-    name: '',
-    email: '',
-    phone: '',
-    location: '',
-    linkedin: '',
-    github: '',
-    summary: '',
+    title: '',
+    resumeType: 'Fusion',
+
+    personalInfo: {
+      firstName: '',
+      lastName: '',
+      jobTitle: '',
+      email: '',
+      phone: '',
+      city: '',
+      country: '',
+      photo: '',
+      summary: '',
+    },
+
+    education: [],
+    experience: [],
+    skills: [],
+    socialLinks: [],
   },
+
   savedResumes: [],
   loading: false,
   error: null,
@@ -28,73 +41,48 @@ const initialState = {
 const resumeReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_CURRENT_RESUME:
-      return {
-        ...state,
-        currentResume: {
-          _id: action.payload._id,
-          name: action.payload.data?.name || '',
-          email: action.payload.data?.email || '',
-          phone: action.payload.data?.phone || '',
-          location: action.payload.data?.location || '',
-          linkedin: action.payload.data?.linkedin || '',
-          github: action.payload.data?.github || '',
-          summary: action.payload.data?.summary || '',
-        },
-      };
+      return { ...state, currentResume: action.payload };
 
-    case UPDATE_CURRENT_RESUME:
-      return {
-        ...state,
-        currentResume: {
-          ...state.currentResume,
-          ...action.payload,
-        },
-      };
-
-    case SAVE_RESUME_REQUEST:
     case FETCH_RESUMES_REQUEST:
+      return { ...state, loading: true };
+
+    case FETCH_RESUMES_SUCCESS:
+      return { ...state, loading: false, savedResumes: action.payload };
+
+    case FETCH_RESUMES_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+
+    case UPDATE_TITLE_SUCCESS:
+      return {
+        ...state,
+        currentResume: action.payload,
+        savedResumes: state.savedResumes.map(r =>
+          r._id === action.payload._id ? action.payload : r,
+        ),
+      };
+    case UPDATE_EDUCATION_REQUEST:
       return {
         ...state,
         loading: true,
         error: null,
       };
 
-    case SAVE_RESUME_SUCCESS: {
-      const updatedResume = action.payload;
-
-      const existingIndex = state.savedResumes.findIndex(
-        r => r._id === updatedResume._id,
-      );
-
-      let newResumes;
-
-      if (existingIndex !== -1) {
-        newResumes = [...state.savedResumes];
-        newResumes[existingIndex] = updatedResume;
-      } else {
-        newResumes = [updatedResume, ...state.savedResumes];
-      }
-
+    case UPDATE_EDUCATION_SUCCESS:
       return {
         ...state,
         loading: false,
-        savedResumes: newResumes,
         currentResume: {
-          _id: updatedResume._id,
-          ...updatedResume.data,
+          ...state.currentResume,
+          education: action.payload,
         },
-      };
-    }
-
-    case FETCH_RESUMES_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        savedResumes: action.payload,
+        savedResumes: state.savedResumes.map(r =>
+          r._id === state.currentResume._id
+            ? { ...r, education: action.payload }
+            : r,
+        ),
       };
 
-    case SAVE_RESUME_FAILURE:
-    case FETCH_RESUMES_FAILURE:
+    case UPDATE_EDUCATION_FAILURE:
       return {
         ...state,
         loading: false,

@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  saveResume,
+  createResume,
   fetchResumes,
   setCurrentResume,
 } from '../redux/actions/resume.actions';
@@ -18,30 +18,40 @@ const MyResumes = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const { savedResumes, loading } = useSelector(state => state.resume);
+  const userId = useSelector(state => state.auth.user?._id);
 
   useEffect(() => {
-    dispatch(fetchResumes());
-  }, [dispatch]);
+    if (userId) {
+      dispatch(fetchResumes(userId));
+    }
+  }, [dispatch, userId]);
 
   const handleNewResumeCreate = async () => {
-    dispatch(
-      setCurrentResume({
-        _id: null,
-        data: {
-          name: '',
-          email: '',
-          phone: '',
-          location: '',
-          linkedin: '',
-          github: '',
-          summary: '',
-        },
-      }),
-    );
-    await dispatch(saveResume());
-    dispatch(fetchResumes());
+    if (!userId) return;
+
+    // Create blank resume in backend
+    await dispatch(createResume(userId, 'Fusion'));
+
     navigation.navigate('Truresume');
   };
+
+  const openResume = resume => {
+    dispatch(setCurrentResume(resume));
+    navigation.navigate('ResumePreview', { resumeId: resume._id });
+  };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity style={styles.card} onPress={() => openResume(item)}>
+      <Text style={styles.title}>{item.title || 'Untitled Resume'}</Text>
+
+      <Text style={styles.meta}>{item.resumeType || 'Fusion'}</Text>
+
+      <Text style={styles.date}>
+        Created:{' '}
+        {item.createdAt ? new Date(item.createdAt).toDateString() : 'N/A'}
+      </Text>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -51,33 +61,14 @@ const MyResumes = ({ navigation }) => {
         ) : (
           <FlatList
             data={savedResumes}
-            keyExtractor={item => item._id || item.id}
+            keyExtractor={item => item._id}
+            renderItem={renderItem}
             ListEmptyComponent={
               <Text style={styles.empty}>No resumes saved yet</Text>
             }
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.card}
-                onPress={() =>
-                  navigation.navigate('ResumePreview', {
-                    resume: item,
-                  })
-                }
-              >
-                <Text style={styles.title}>
-                  {item.title || item.name || 'Untitled Resume'}
-                </Text>
-
-                <Text style={styles.date}>
-                  Created on{' '}
-                  {item.createdAt
-                    ? new Date(item.createdAt).toDateString()
-                    : 'N/A'}
-                </Text>
-              </TouchableOpacity>
-            )}
           />
         )}
+
         <TouchableOpacity
           style={styles.newResumeBtn}
           onPress={handleNewResumeCreate}
@@ -91,32 +82,46 @@ const MyResumes = ({ navigation }) => {
 
 export default MyResumes;
 
+/* ================= STYLES ================= */
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
     backgroundColor: '#f4f6f8',
   },
+
   card: {
     backgroundColor: '#fff',
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
   },
+
   title: {
     fontWeight: 'bold',
     fontSize: 16,
+    color: '#111827',
   },
-  date: {
+
+  meta: {
     fontSize: 12,
     color: '#6b7280',
+    marginTop: 2,
+  },
+
+  date: {
+    fontSize: 12,
+    color: '#9ca3af',
     marginTop: 4,
   },
+
   empty: {
     textAlign: 'center',
     marginTop: 40,
     color: '#9ca3af',
   },
+
   newResumeBtn: {
     marginTop: 20,
     backgroundColor: '#2563eb',

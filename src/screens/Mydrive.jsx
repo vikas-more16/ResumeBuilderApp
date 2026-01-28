@@ -8,50 +8,47 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchResumes } from '../redux/actions/resume.actions';
+import {
+  fetchResumes,
+  setCurrentResume,
+} from '../redux/actions/resume.actions';
 
 const Mydrive = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const { savedResumes, loading } = useSelector(state => state.resume);
+  const userId = useSelector(state => state.auth.user?.id);
 
   useEffect(() => {
-    dispatch(fetchResumes());
-  }, [dispatch]);
+    if (userId) {
+      dispatch(fetchResumes(userId));
+    }
+  }, [dispatch, userId]);
+
+  const openResume = resume => {
+    dispatch(setCurrentResume(resume));
+    navigation.navigate('editResume');
+  };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity style={styles.card} onPress={() => openResume(item)}>
+      <Text style={styles.title}>{item.title || 'Untitled Resume'}</Text>
+      <Text style={styles.meta}>{item.resumeType || 'Fusion'}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         {loading ? (
-          <Text style={styles.empty}>Loading resumes...</Text>
+          <Text>Loading...</Text>
         ) : (
           <FlatList
             data={savedResumes}
-            keyExtractor={item => item._id || item.id}
-            ListEmptyComponent={
-              <Text style={styles.empty}>No resumes saved yet</Text>
-            }
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.card}
-                onPress={() =>
-                  navigation.navigate('ResumePreview', {
-                    resume: item,
-                  })
-                }
-              >
-                <Text style={styles.title}>
-                  {item.title || item.name || 'Untitled Resume'}
-                </Text>
-
-                <Text style={styles.date}>
-                  Created on{' '}
-                  {item.createdAt
-                    ? new Date(item.createdAt).toDateString()
-                    : 'N/A'}
-                </Text>
-              </TouchableOpacity>
-            )}
+            keyExtractor={item => item._id}
+            renderItem={renderItem}
+            numColumns={2}
+            columnWrapperStyle={styles.row}
           />
         )}
       </View>
@@ -62,29 +59,15 @@ const Mydrive = ({ navigation }) => {
 export default Mydrive;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#f4f6f8',
-  },
+  container: { flex: 1, padding: 16 },
+  row: { justifyContent: 'space-between' },
   card: {
+    width: '48%',
     backgroundColor: '#fff',
-    padding: 16,
+    padding: 14,
     borderRadius: 12,
     marginBottom: 12,
   },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  date: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginTop: 4,
-  },
-  empty: {
-    textAlign: 'center',
-    marginTop: 40,
-    color: '#9ca3af',
-  },
+  title: { fontWeight: 'bold' },
+  meta: { fontSize: 12, color: '#6b7280' },
 });
