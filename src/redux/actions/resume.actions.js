@@ -22,9 +22,43 @@ import {
   UPDATE_SKILLS_FAILURE,
   UPDATE_SKILLS_SUCCESS,
   UPDATE_SKILLS_REQUEST,
+  CREATE_RESUME_SUCCESS,
+  CREATE_RESUME_REQUEST,
+  CREATE_RESUME_FAILURE,
 } from '../types/resume.types';
 
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
+
+export const createResume = (userId, resumeType) => async dispatch => {
+  console.log('3');
+
+  dispatch({ type: CREATE_RESUME_REQUEST });
+
+  try {
+    const res = await axios.post(`${API_URL}/create`, {
+      userId,
+      resumeType,
+    });
+
+    const resume = res.data.resume;
+    dispatch({
+      type: SET_CURRENT_RESUME,
+      payload: resume,
+    });
+
+    dispatch({
+      type: CREATE_RESUME_SUCCESS,
+      payload: resume,
+    });
+
+    return resume;
+  } catch (error) {
+    dispatch({
+      type: CREATE_RESUME_FAILURE,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
 
 export const setCurrentResume = resume => ({
   type: SET_CURRENT_RESUME,

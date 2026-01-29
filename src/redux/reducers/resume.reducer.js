@@ -19,6 +19,9 @@ import {
   UPDATE_SKILLS_FAILURE,
   UPDATE_SKILLS_SUCCESS,
   UPDATE_SKILLS_REQUEST,
+  CREATE_RESUME_FAILURE,
+  CREATE_RESUME_SUCCESS,
+  CREATE_RESUME_REQUEST,
 } from '../types/resume.types';
 
 const initialState = {
@@ -52,6 +55,27 @@ const initialState = {
 
 const resumeReducer = (state = initialState, action) => {
   switch (action.type) {
+    case CREATE_RESUME_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case CREATE_RESUME_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        savedResumes: [action.payload, ...state.savedResumes],
+      };
+
+    case CREATE_RESUME_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
     case SET_CURRENT_RESUME:
       return { ...state, currentResume: action.payload };
 
