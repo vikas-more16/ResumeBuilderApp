@@ -55,7 +55,7 @@ export const fusionResumeHTML = (resume = {}) => {
   ul {
     margin: 6px 0 0 18px;
   }
-    li{
+    p ,li{
     font-size:30px;
     }
 </style>

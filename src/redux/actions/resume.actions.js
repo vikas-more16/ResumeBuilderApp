@@ -10,6 +10,9 @@ import {
   UPDATE_EDUCATION_REQUEST,
   UPDATE_EDUCATION_SUCCESS,
   UPDATE_EDUCATION_FAILURE,
+  UPDATE_PERSONAL_INFO_REQUEST,
+  UPDATE_PERSONAL_INFO_SUCCESS,
+  UPDATE_PERSONAL_INFO_FAILURE,
 } from '../types/resume.types';
 
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
@@ -72,3 +75,25 @@ export const updateEducation = (resumeId, education) => async dispatch => {
     });
   }
 };
+
+export const updatePersonalInfo =
+  (resumeId, personalInfo) => async dispatch => {
+    dispatch({ type: UPDATE_PERSONAL_INFO_REQUEST });
+
+    try {
+      const res = await axios.patch(
+        `${API_URL}/${resumeId}/personal-info`,
+        personalInfo,
+      );
+
+      dispatch({
+        type: UPDATE_PERSONAL_INFO_SUCCESS,
+        payload: res.data.personalInfo,
+      });
+    } catch (error) {
+      dispatch({
+        type: UPDATE_PERSONAL_INFO_FAILURE,
+        payload: error.response?.data?.message || error.message,
+      });
+    }
+  };

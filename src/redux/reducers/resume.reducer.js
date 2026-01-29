@@ -7,6 +7,9 @@ import {
   UPDATE_EDUCATION_REQUEST,
   UPDATE_EDUCATION_SUCCESS,
   UPDATE_EDUCATION_FAILURE,
+  UPDATE_PERSONAL_INFO_FAILURE,
+  UPDATE_PERSONAL_INFO_SUCCESS,
+  UPDATE_PERSONAL_INFO_REQUEST,
 } from '../types/resume.types';
 
 const initialState = {
@@ -83,6 +86,35 @@ const resumeReducer = (state = initialState, action) => {
       };
 
     case UPDATE_EDUCATION_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    case UPDATE_PERSONAL_INFO_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case UPDATE_PERSONAL_INFO_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        currentResume: {
+          ...state.currentResume,
+          personalInfo: action.payload,
+        },
+        savedResumes: state.savedResumes.map(r =>
+          r._id === state.currentResume._id
+            ? { ...r, personalInfo: action.payload }
+            : r,
+        ),
+      };
+
+    case UPDATE_PERSONAL_INFO_FAILURE:
       return {
         ...state,
         loading: false,
