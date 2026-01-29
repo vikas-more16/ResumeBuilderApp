@@ -16,6 +16,9 @@ import {
   UPDATE_SOCIAL_LINKS_REQUEST,
   UPDATE_SOCIAL_LINKS_SUCCESS,
   UPDATE_SOCIAL_LINKS_FAILURE,
+  UPDATE_EXPERIENCE_REQUEST,
+  UPDATE_EXPERIENCE_SUCCESS,
+  UPDATE_EXPERIENCE_FAILURE,
 } from '../types/resume.types';
 
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
@@ -116,6 +119,26 @@ export const updateSocialLinks = (resumeId, socialLinks) => async dispatch => {
   } catch (error) {
     dispatch({
       type: UPDATE_SOCIAL_LINKS_FAILURE,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
+
+export const updateExperience = (resumeId, experience) => async dispatch => {
+  dispatch({ type: UPDATE_EXPERIENCE_REQUEST });
+
+  try {
+    const res = await axios.patch(`${API_URL}/${resumeId}/experience`, {
+      experience,
+    });
+
+    dispatch({
+      type: UPDATE_EXPERIENCE_SUCCESS,
+      payload: res.data.experience,
+    });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_EXPERIENCE_FAILURE,
       payload: error.response?.data?.message || error.message,
     });
   }

@@ -97,6 +97,20 @@ const EditResume = ({ navigation }) => {
           <Text style={styles.EditText}>Edit</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Experience</Text>
+        <TouchableOpacity
+          style={styles.editBtn}
+          activeOpacity={0.85}
+          onPress={() =>
+            navigation.navigate('EditExperience', {
+              resumeId: resume._id,
+            })
+          }
+        >
+          <Text style={styles.EditText}>Edit</Text>
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity
         style={styles.previewBtn}
         activeOpacity={0.85}

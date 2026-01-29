@@ -13,6 +13,9 @@ import {
   UPDATE_SOCIAL_LINKS_FAILURE,
   UPDATE_SOCIAL_LINKS_SUCCESS,
   UPDATE_SOCIAL_LINKS_REQUEST,
+  UPDATE_EXPERIENCE_REQUEST,
+  UPDATE_EXPERIENCE_SUCCESS,
+  UPDATE_EXPERIENCE_FAILURE,
 } from '../types/resume.types';
 
 const initialState = {
@@ -144,6 +147,35 @@ const resumeReducer = (state = initialState, action) => {
 
     case UPDATE_SOCIAL_LINKS_FAILURE:
       return { ...state, loading: false, error: action.payload };
+
+    case UPDATE_EXPERIENCE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case UPDATE_EXPERIENCE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        currentResume: {
+          ...state.currentResume,
+          experience: action.payload,
+        },
+        savedResumes: state.savedResumes.map(r =>
+          r._id === state.currentResume._id
+            ? { ...r, experience: action.payload }
+            : r,
+        ),
+      };
+
+    case UPDATE_EXPERIENCE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
 
     default:
       return state;
