@@ -32,14 +32,9 @@ const MyResumes = ({ navigation }) => {
   };
 
   const handleNewResumeCreate = async () => {
-    console.log('1');
-
     if (!userId) return;
-    console.log('2', userId);
 
     const resume = await dispatch(createResume(userId, 'Fusion'));
-    console.log('4');
-    console.log(resume);
 
     if (resume?._id) {
       navigation.navigate('editResume', {

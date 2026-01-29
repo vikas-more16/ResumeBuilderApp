@@ -22,6 +22,9 @@ import {
   CREATE_RESUME_FAILURE,
   CREATE_RESUME_SUCCESS,
   CREATE_RESUME_REQUEST,
+  DELETE_RESUME_FAILURE,
+  DELETE_RESUME_SUCCESS,
+  DELETE_RESUME_REQUEST,
 } from '../types/resume.types';
 
 const initialState = {
@@ -78,6 +81,31 @@ const resumeReducer = (state = initialState, action) => {
 
     case SET_CURRENT_RESUME:
       return { ...state, currentResume: action.payload };
+
+    case DELETE_RESUME_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case DELETE_RESUME_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        currentResume:
+          state.currentResume?._id === action.payload
+            ? null
+            : state.currentResume,
+        savedResumes: state.savedResumes.filter(r => r._id !== action.payload),
+      };
+
+    case DELETE_RESUME_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
 
     case FETCH_RESUMES_REQUEST:
       return { ...state, loading: true };

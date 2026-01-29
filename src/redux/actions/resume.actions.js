@@ -25,13 +25,14 @@ import {
   CREATE_RESUME_SUCCESS,
   CREATE_RESUME_REQUEST,
   CREATE_RESUME_FAILURE,
+  DELETE_RESUME_REQUEST,
+  DELETE_RESUME_SUCCESS,
+  DELETE_RESUME_FAILURE,
 } from '../types/resume.types';
 
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
 
 export const createResume = (userId, resumeType) => async dispatch => {
-  console.log('3');
-
   dispatch({ type: CREATE_RESUME_REQUEST });
 
   try {
@@ -55,6 +56,24 @@ export const createResume = (userId, resumeType) => async dispatch => {
   } catch (error) {
     dispatch({
       type: CREATE_RESUME_FAILURE,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};
+
+export const deleteResume = resumeId => async dispatch => {
+  dispatch({ type: DELETE_RESUME_REQUEST });
+
+  try {
+    await axios.delete(`${API_URL}/${resumeId}`);
+
+    dispatch({
+      type: DELETE_RESUME_SUCCESS,
+      payload: resumeId,
+    });
+  } catch (error) {
+    dispatch({
+      type: DELETE_RESUME_FAILURE,
       payload: error.response?.data?.message || error.message,
     });
   }

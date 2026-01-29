@@ -10,7 +10,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateResumeTitle } from '../redux/actions/resume.actions';
-import ResumePreview from './ResumePreview';
+import { Alert } from 'react-native';
+import { deleteResume } from '../redux/actions/resume.actions';
 
 const EditResume = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -29,6 +30,32 @@ const EditResume = ({ navigation }) => {
     if (!resume?._id) return;
     dispatch(updateResumeTitle(resume._id, title.trim() || 'Untitled'));
     setIsEditing(false);
+  };
+
+  const handleResumeDelete = () => {
+    if (!resume?._id) return;
+
+    Alert.alert(
+      'Delete Resume',
+      'Are you sure you want to delete this resume? This action cannot be undone.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await dispatch(deleteResume(resume._id));
+
+            navigation.navigate('MyResumes', {
+              resumeId: resume._id,
+            });
+          },
+        },
+      ],
+    );
   };
 
   return (
@@ -136,6 +163,12 @@ const EditResume = ({ navigation }) => {
       >
         <Text style={styles.previewText}>Preview Resume</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.deleteResumeBtn}
+        onPress={handleResumeDelete}
+      >
+        <Text style={styles.deleteResumeText}>Delete Resume</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -177,6 +210,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 3,
+  },
+  deleteResumeBtn: {
+    marginTop: 24,
+    marginHorizontal: 16,
+    backgroundColor: '#8b0a0a',
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+  },
+  deleteResumeText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+    letterSpacing: 0.3,
   },
 
   previewText: {
