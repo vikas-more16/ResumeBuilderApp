@@ -13,6 +13,9 @@ import {
   UPDATE_PERSONAL_INFO_REQUEST,
   UPDATE_PERSONAL_INFO_SUCCESS,
   UPDATE_PERSONAL_INFO_FAILURE,
+  UPDATE_SOCIAL_LINKS_REQUEST,
+  UPDATE_SOCIAL_LINKS_SUCCESS,
+  UPDATE_SOCIAL_LINKS_FAILURE,
 } from '../types/resume.types';
 
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
@@ -97,3 +100,23 @@ export const updatePersonalInfo =
       });
     }
   };
+
+export const updateSocialLinks = (resumeId, socialLinks) => async dispatch => {
+  dispatch({ type: UPDATE_SOCIAL_LINKS_REQUEST });
+
+  try {
+    const res = await axios.patch(`${API_URL}/${resumeId}/social-links`, {
+      socialLinks,
+    });
+
+    dispatch({
+      type: UPDATE_SOCIAL_LINKS_SUCCESS,
+      payload: res.data.socialLinks,
+    });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_SOCIAL_LINKS_FAILURE,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};

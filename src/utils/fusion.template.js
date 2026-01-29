@@ -74,7 +74,23 @@ export const fusionResumeHTML = (resume = {}) => {
     ${personal.phone ? ' | ' : ''}
     ${location}
   </div>
-
+${
+  resume.socialLinks?.length
+    ? `<div class="section">Links</div>
+         <ul>
+           ${resume.socialLinks
+             .map(
+               link => `
+             <li>
+               ${link.network || ''} :
+               ${link.link || ''}
+             </li>
+           `,
+             )
+             .join('')}
+         </ul>`
+    : ''
+}
   ${
     personal.summary
       ? `<div class="section">Summary</div>
@@ -149,24 +165,6 @@ export const fusionResumeHTML = (resume = {}) => {
          `,
            )
            .join('')}`
-      : ''
-  }
-
-  ${
-    resume.socialLinks?.length
-      ? `<div class="section">Links</div>
-         <ul>
-           ${resume.socialLinks
-             .map(
-               link => `
-             <li>
-               ${link.network || ''} :
-               ${link.link || ''}
-             </li>
-           `,
-             )
-             .join('')}
-         </ul>`
       : ''
   }
 

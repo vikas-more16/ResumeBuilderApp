@@ -18,6 +18,8 @@ import EditEducation from '../screens/EditEducation';
 import EducationForm from '../screens/EducationForm';
 import EditProfile from '../screens/EditProfile';
 import ProfileForm from '../screens/ProfileForm';
+import EditLinks from '../screens/EditLinks';
+import LinksForm from '../screens/LinksForm';
 
 const Stack = createNativeStackNavigator();
 
@@ -90,6 +92,8 @@ const AppStack = () => {
       <Stack.Screen name="EducationForm" component={EducationForm} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="ProfileForm" component={ProfileForm} />
+      <Stack.Screen name="EditLinks" component={EditLinks} />
+      <Stack.Screen name="LinksForm" component={LinksForm} />
     </Stack.Navigator>
   );
 };

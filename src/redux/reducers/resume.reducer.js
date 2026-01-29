@@ -10,6 +10,9 @@ import {
   UPDATE_PERSONAL_INFO_FAILURE,
   UPDATE_PERSONAL_INFO_SUCCESS,
   UPDATE_PERSONAL_INFO_REQUEST,
+  UPDATE_SOCIAL_LINKS_FAILURE,
+  UPDATE_SOCIAL_LINKS_SUCCESS,
+  UPDATE_SOCIAL_LINKS_REQUEST,
 } from '../types/resume.types';
 
 const initialState = {
@@ -120,6 +123,27 @@ const resumeReducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
       };
+
+    case UPDATE_SOCIAL_LINKS_REQUEST:
+      return { ...state, loading: true, error: null };
+
+    case UPDATE_SOCIAL_LINKS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        currentResume: {
+          ...state.currentResume,
+          socialLinks: action.payload,
+        },
+        savedResumes: state.savedResumes.map(r =>
+          r._id === state.currentResume._id
+            ? { ...r, socialLinks: action.payload }
+            : r,
+        ),
+      };
+
+    case UPDATE_SOCIAL_LINKS_FAILURE:
+      return { ...state, loading: false, error: action.payload };
 
     default:
       return state;
