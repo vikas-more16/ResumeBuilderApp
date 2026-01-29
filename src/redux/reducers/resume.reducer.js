@@ -16,6 +16,9 @@ import {
   UPDATE_EXPERIENCE_REQUEST,
   UPDATE_EXPERIENCE_SUCCESS,
   UPDATE_EXPERIENCE_FAILURE,
+  UPDATE_SKILLS_FAILURE,
+  UPDATE_SKILLS_SUCCESS,
+  UPDATE_SKILLS_REQUEST,
 } from '../types/resume.types';
 
 const initialState = {
@@ -171,6 +174,35 @@ const resumeReducer = (state = initialState, action) => {
       };
 
     case UPDATE_EXPERIENCE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    case UPDATE_SKILLS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case UPDATE_SKILLS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        currentResume: {
+          ...state.currentResume,
+          skills: action.payload,
+        },
+        savedResumes: state.savedResumes.map(r =>
+          r._id === state.currentResume._id
+            ? { ...r, skills: action.payload }
+            : r,
+        ),
+      };
+
+    case UPDATE_SKILLS_FAILURE:
       return {
         ...state,
         loading: false,
