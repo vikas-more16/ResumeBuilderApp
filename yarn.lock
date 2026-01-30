@@ -2258,6 +2258,11 @@
   resolved "https://registry.npmjs.org/@react-native-google-signin/google-signin/-/google-signin-16.1.1.tgz#40b9f8458a09cf8933132efd8a68f0a573167e92"
   integrity sha512-lcHBnZ7uvCJiWtGooKOklo/4okqszWvJ0BatW1UaIe+ynmpVpp1lyJkvv1Mj08d39k4soaWuhZVNKjD/RFL34Q==
 
+"@react-native-picker/picker@^2.11.4":
+  version "2.11.4"
+  resolved "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.11.4.tgz#7fb09506ee00a82989125cc03e8495204c8afc01"
+  integrity sha512-Kf8h1AMnBo54b1fdiVylP2P/iFcZqzpMYcglC28EEFB1DEnOjsNr6Ucqc+3R9e91vHxEDnhZFbYDmAe79P2gjA==
+
 "@react-native/assets-registry@0.83.1":
   version "0.83.1"
   resolved "https://registry.npmjs.org/@react-native/assets-registry/-/assets-registry-0.83.1.tgz#d210065b8d7939660f845fba3c6d9e5aa5998d13"
