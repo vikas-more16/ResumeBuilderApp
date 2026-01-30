@@ -6,6 +6,7 @@ import {
   Alert,
   Text,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -64,18 +65,53 @@ const EditResumeStyle = ({ route }) => {
 
     fetchResume();
   }, [resumeId]);
+
   const updateH1FontSize = value => {
-    setStyle(prev => ({
-      ...prev,
-      h1Size: value,
-    }));
+    setStyle(prev => ({ ...prev, h1Size: value }));
+  };
+
+  const updateSubFontSize = value => {
+    setStyle(prev => ({ ...prev, subSize: value }));
+  };
+
+  const updateSectionFontSize = value => {
+    setStyle(prev => ({ ...prev, sectionSize: value }));
+  };
+
+  const updateItemFontSize = value => {
+    setStyle(prev => ({ ...prev, itemSize: value }));
+  };
+
+  const updateMutedFontSize = value => {
+    setStyle(prev => ({ ...prev, mutedSize: value }));
   };
 
   const updateFontFamily = value => {
-    setStyle(prev => ({
-      ...prev,
-      bodyFontFamily: value,
-    }));
+    setStyle(prev => ({ ...prev, bodyFontFamily: value }));
+  };
+
+  const updateBodyColor = value => {
+    setStyle(prev => ({ ...prev, bodyColor: value }));
+  };
+
+  const updateH1Color = value => {
+    setStyle(prev => ({ ...prev, h1Color: value }));
+  };
+
+  const updateSubColor = value => {
+    setStyle(prev => ({ ...prev, subColor: value }));
+  };
+
+  const updateMutedColor = value => {
+    setStyle(prev => ({ ...prev, mutedColor: value }));
+  };
+
+  const updatePhotoSize = value => {
+    setStyle(prev => ({ ...prev, photoSize: value }));
+  };
+
+  const updatePhotoRadius = value => {
+    setStyle(prev => ({ ...prev, photoRadius: value }));
   };
 
   const saveStyle = async () => {
@@ -107,18 +143,7 @@ const EditResumeStyle = ({ route }) => {
       />
 
       <View style={styles.controls}>
-        <Text>Name Font Size : {style.h1Size}</Text>
-
-        <Slider
-          minimumValue={40}
-          maximumValue={90}
-          step={1}
-          value={style.h1Size}
-          onValueChange={updateH1FontSize}
-        />
-
         <Text style={{ marginTop: 12 }}>Body Font Family</Text>
-
         <View
           style={{
             borderWidth: 1,
@@ -141,6 +166,63 @@ const EditResumeStyle = ({ route }) => {
           </Picker>
         </View>
 
+        <Text>Photo Size: {style.photoSize}</Text>
+        <Slider
+          minimumValue={80}
+          maximumValue={200}
+          step={1}
+          value={style.photoSize}
+          onValueChange={updatePhotoSize}
+        />
+        <Text>Heading Size: {style.h1Size}</Text>
+        <Slider
+          minimumValue={40}
+          maximumValue={90}
+          step={1}
+          value={style.h1Size}
+          onValueChange={updateH1FontSize}
+        />
+
+        <Text>Sub Headings Size: {style.subSize}</Text>
+        <Slider
+          minimumValue={20}
+          maximumValue={40}
+          step={1}
+          value={style.subSize}
+          onValueChange={updateSubFontSize}
+        />
+        <Text>Section Size: {style.sectionSize}</Text>
+        <Slider
+          minimumValue={30}
+          maximumValue={50}
+          step={1}
+          value={style.sectionSize}
+          onValueChange={updateSectionFontSize}
+        />
+        <Text>item Size: {style.itemSize}</Text>
+        <Slider
+          minimumValue={20}
+          maximumValue={35}
+          step={1}
+          value={style.itemSize}
+          onValueChange={updateItemFontSize}
+        />
+        <Text>muted Size: {style.mutedSize}</Text>
+        <Slider
+          minimumValue={20}
+          maximumValue={35}
+          step={1}
+          value={style.mutedSize}
+          onValueChange={updateMutedFontSize}
+        />
+
+        {/* <Text>Heading Color</Text>
+          <TextInput
+            value={style.h1Color}
+            onChangeText={updateH1Color}
+            placeholder="#000000"
+            style={{ borderWidth: 1, padding: 8 }}
+          /> */}
         <TouchableOpacity
           style={styles.saveBtn}
           onPress={saveStyle}

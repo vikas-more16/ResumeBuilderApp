@@ -56,7 +56,7 @@ ${css}
   ${
     personal.summary
       ? `<div class="section">Summary</div>
-         <p>${personal.summary}</p>`
+         <p class="muted">${personal.summary}</p>`
       : ''
   }
 
