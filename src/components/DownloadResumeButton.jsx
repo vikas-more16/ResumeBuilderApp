@@ -11,12 +11,14 @@ import axios from 'axios';
 import { generatePDF } from 'react-native-html-to-pdf';
 import RNFS from 'react-native-fs';
 import { fusionResumeHTML } from '../utils/fusion.template';
+import { buildCSS } from '../utils/buildCSS';
 
 /* ================= API ================= */
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
 
 const DownloadResumeButton = ({ resumeId }) => {
   const [loading, setLoading] = useState(false);
+  const [style, setStyle] = useState(null);
 
   const downloadPDF = async () => {
     if (!resumeId) {
@@ -30,13 +32,14 @@ const DownloadResumeButton = ({ resumeId }) => {
       /* ---------- 1. FETCH RESUME ---------- */
       const res = await axios.get(`${API_URL}/${resumeId}`);
       const resume = res.data.resume;
+      setStyle(res.data.resume.resumeStyle);
 
       if (!resume) {
         throw new Error('Resume not found');
       }
 
       /* ---------- 2. GENERATE HTML ---------- */
-      const html = fusionResumeHTML(resume);
+      const html = fusionResumeHTML(resume, buildCSS(style));
 
       const fileBaseName =
         resume.title?.trim().replace(/\s+/g, '_') || 'resume';

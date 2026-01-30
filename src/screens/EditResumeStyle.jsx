@@ -6,7 +6,6 @@ import {
   Alert,
   Text,
   TouchableOpacity,
-  TextInput,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,6 +14,9 @@ import { WebView } from 'react-native-webview';
 import { fusionResumeHTML } from '../utils/fusion.template';
 import { Picker } from '@react-native-picker/picker';
 import { buildCSS } from '../utils/buildCSS';
+import ColorPicker from 'react-native-wheel-color-picker';
+import ColorSquare from '../components/ColorSquare';
+import Modal from 'react-native-modal';
 
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
 
@@ -48,6 +50,10 @@ const EditResumeStyle = ({ route }) => {
   const [style, setStyle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [tempColor, setTempColor] = useState('#000000');
+  const [colorPickerVisible, setColorPickerVisible] = useState(false);
+  const [activeColorKey, setActiveColorKey] = useState(null);
+
   useEffect(() => {
     const fetchResume = async () => {
       try {
@@ -65,6 +71,12 @@ const EditResumeStyle = ({ route }) => {
 
     fetchResume();
   }, [resumeId]);
+
+  const openColorPicker = key => {
+    setActiveColorKey(key);
+    setTempColor(style[key] || '#000000');
+    setColorPickerVisible(true);
+  };
 
   const updateH1FontSize = value => {
     setStyle(prev => ({ ...prev, h1Size: value }));
@@ -88,22 +100,6 @@ const EditResumeStyle = ({ route }) => {
 
   const updateFontFamily = value => {
     setStyle(prev => ({ ...prev, bodyFontFamily: value }));
-  };
-
-  const updateBodyColor = value => {
-    setStyle(prev => ({ ...prev, bodyColor: value }));
-  };
-
-  const updateH1Color = value => {
-    setStyle(prev => ({ ...prev, h1Color: value }));
-  };
-
-  const updateSubColor = value => {
-    setStyle(prev => ({ ...prev, subColor: value }));
-  };
-
-  const updateMutedColor = value => {
-    setStyle(prev => ({ ...prev, mutedColor: value }));
   };
 
   const updatePhotoSize = value => {
@@ -165,6 +161,9 @@ const EditResumeStyle = ({ route }) => {
             ))}
           </Picker>
         </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ flex: 1 }}>Body Color</Text>
+        </View>
 
         <Text>Photo Size: {style.photoSize}</Text>
         <Slider
@@ -174,7 +173,21 @@ const EditResumeStyle = ({ route }) => {
           value={style.photoSize}
           onValueChange={updatePhotoSize}
         />
-        <Text>Heading Size: {style.h1Size}</Text>
+        <Text>Photo Radius: {style.photoRadius}</Text>
+        <Slider
+          minimumValue={0}
+          maximumValue={50}
+          step={1}
+          value={style.photoRadius}
+          onValueChange={updatePhotoRadius}
+        />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ flex: 1 }}>Heading Color</Text>
+          <ColorSquare
+            color={style.h1Color}
+            onPress={() => openColorPicker('h1Color')}
+          />
+        </View>
         <Slider
           minimumValue={40}
           maximumValue={90}
@@ -182,8 +195,13 @@ const EditResumeStyle = ({ route }) => {
           value={style.h1Size}
           onValueChange={updateH1FontSize}
         />
-
-        <Text>Sub Headings Size: {style.subSize}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ flex: 1 }}>Sub Headings Size: {style.subSize}</Text>
+          <ColorSquare
+            color={style.subColor}
+            onPress={() => openColorPicker('subColor')}
+          />
+        </View>
         <Slider
           minimumValue={20}
           maximumValue={40}
@@ -191,7 +209,13 @@ const EditResumeStyle = ({ route }) => {
           value={style.subSize}
           onValueChange={updateSubFontSize}
         />
-        <Text>Section Size: {style.sectionSize}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ flex: 1 }}>Section Size: {style.sectionSize}</Text>
+          <ColorSquare
+            color={style.bodyColor}
+            onPress={() => openColorPicker('bodyColor')}
+          />
+        </View>
         <Slider
           minimumValue={30}
           maximumValue={50}
@@ -199,7 +223,9 @@ const EditResumeStyle = ({ route }) => {
           value={style.sectionSize}
           onValueChange={updateSectionFontSize}
         />
-        <Text>item Size: {style.itemSize}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ flex: 1 }}>item Size: {style.itemSize}</Text>
+        </View>
         <Slider
           minimumValue={20}
           maximumValue={35}
@@ -207,7 +233,13 @@ const EditResumeStyle = ({ route }) => {
           value={style.itemSize}
           onValueChange={updateItemFontSize}
         />
-        <Text>muted Size: {style.mutedSize}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ flex: 1 }}>muted Size: {style.mutedSize}</Text>
+          <ColorSquare
+            color={style.mutedColor}
+            onPress={() => openColorPicker('mutedColor')}
+          />
+        </View>
         <Slider
           minimumValue={20}
           maximumValue={35}
@@ -215,14 +247,6 @@ const EditResumeStyle = ({ route }) => {
           value={style.mutedSize}
           onValueChange={updateMutedFontSize}
         />
-
-        {/* <Text>Heading Color</Text>
-          <TextInput
-            value={style.h1Color}
-            onChangeText={updateH1Color}
-            placeholder="#000000"
-            style={{ borderWidth: 1, padding: 8 }}
-          /> */}
         <TouchableOpacity
           style={styles.saveBtn}
           onPress={saveStyle}
@@ -233,6 +257,50 @@ const EditResumeStyle = ({ route }) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <Modal
+        isVisible={colorPickerVisible}
+        backdropOpacity={0.5}
+        onBackdropPress={() => setColorPickerVisible(false)}
+        useNativeDriver
+        hideModalContentWhileAnimating
+      >
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Pick a color</Text>
+
+          <View style={styles.colorPickerWrapper}>
+            <ColorPicker
+              color={tempColor}
+              onColorChange={setTempColor}
+              thumbSize={30}
+              sliderSize={30}
+              noSnap={true}
+              row={false}
+              style={{ flex: 1 }}
+            />
+          </View>
+
+          <TouchableOpacity
+            style={styles.doneBtn}
+            onPress={() => {
+              if (!activeColorKey) return;
+              setStyle(prev => ({
+                ...prev,
+                [activeColorKey]: tempColor,
+              }));
+              setColorPickerVisible(false);
+            }}
+          >
+            <Text style={styles.doneText}>Done</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.cancelBtn}
+            onPress={() => setColorPickerVisible(false)}
+          >
+            <Text style={styles.cancelText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -267,5 +335,51 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  modalContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'stretch',
+  },
+
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+
+  colorPickerWrapper: {
+    height: 280,
+    justifyContent: 'center',
+  },
+
+  doneBtn: {
+    marginTop: 16,
+    backgroundColor: '#2563eb',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+
+  doneText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+
+  cancelBtn: {
+    marginTop: 10,
+    backgroundColor: '#9ca3af',
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+
+  cancelText: {
+    color: '#fff',
+    fontSize: 14,
   },
 });

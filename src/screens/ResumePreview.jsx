@@ -5,6 +5,7 @@ import axios from 'axios';
 import { WebView } from 'react-native-webview';
 import DownloadResumeButton from '../components/DownloadResumeButton';
 import { fusionResumeHTML } from '../utils/fusion.template';
+import { buildCSS } from '../utils/buildCSS';
 
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
 
@@ -13,12 +14,14 @@ const ResumePreview = ({ route }) => {
 
   const [resume, setResume] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [style, setStyle] = useState(null);
 
   useEffect(() => {
     const fetchResume = async () => {
       try {
         const res = await axios.get(`${API_URL}/${resumeId}`);
         setResume(res.data.resume);
+        setStyle(res.data.resume.resumeStyle);
       } catch (error) {
         Alert.alert('Error', 'Failed to load resume');
       } finally {
@@ -44,7 +47,7 @@ const ResumePreview = ({ route }) => {
       {/* ===== PREVIEW ===== */}
       <WebView
         originWhitelist={['*']}
-        source={{ html: fusionResumeHTML(resume) }}
+        source={{ html: fusionResumeHTML(resume, buildCSS(style)) }}
         style={styles.webview}
       />
 
