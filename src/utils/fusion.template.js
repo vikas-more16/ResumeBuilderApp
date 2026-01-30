@@ -1,4 +1,4 @@
-export const fusionResumeHTML = (resume = {}, cssOverride = '') => {
+export const fusionResumeHTML = (resume = {}, css = '') => {
   const personal = resume.personalInfo || {};
 
   const fullName = `${personal.firstName || ''} ${
@@ -6,8 +6,6 @@ export const fusionResumeHTML = (resume = {}, cssOverride = '') => {
   }`.trim();
 
   const location = [personal.city, personal.country].filter(Boolean).join(', ');
-
-  const css = cssOverride || resume.resumeCSS || '';
 
   return `
 <!DOCTYPE html>

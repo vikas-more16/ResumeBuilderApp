@@ -13,6 +13,7 @@ import axios from 'axios';
 import { WebView } from 'react-native-webview';
 import { fusionResumeHTML } from '../utils/fusion.template';
 import { Picker } from '@react-native-picker/picker';
+import { buildCSS } from '../utils/buildCSS';
 
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
 
@@ -43,32 +44,9 @@ const EditResumeStyle = ({ route }) => {
   const { resumeId } = route.params;
 
   const [resume, setResume] = useState(null);
-  const [resumeCSS, setResumeCSS] = useState('');
+  const [style, setStyle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [bodyFontFamily, setBodyFontFamily] = useState(
-    'Arial, Helvetica, sans-serif',
-  );
-  const [h1Size, setH1Size] = useState(70);
-
-  const readBodyFontFamily = (
-    css,
-    fallback = 'Arial, Helvetica, sans-serif',
-  ) => {
-    if (!css) return fallback;
-
-    const match = css.match(/body\s*\{[^}]*font-family\s*:\s*([^;]+);/i);
-
-    return match ? match[1].trim() : fallback;
-  };
-
-  const readH1FontSize = (css, fallback = 70) => {
-    if (!css) return fallback;
-
-    const match = css.match(/h1\s*\{[^}]*font-size\s*:\s*(\d+)px/i);
-    return match ? parseInt(match[1], 10) : fallback;
-  };
-
   useEffect(() => {
     const fetchResume = async () => {
       try {
@@ -76,15 +54,8 @@ const EditResumeStyle = ({ route }) => {
         const resumeData = res.data.resume;
 
         setResume(resumeData);
-        setResumeCSS(resumeData.resumeCSS || '');
-        setBodyFontFamily(
-          readBodyFontFamily(
-            resumeData.resumeCSS,
-            'Arial, Helvetica, sans-serif',
-          ),
-        );
-        setH1Size(readH1FontSize(resumeData.resumeCSS, 70));
-      } catch (error) {
+        setStyle(resumeData.resumeStyle);
+      } catch {
         Alert.alert('Error', 'Failed to load resume');
       } finally {
         setLoading(false);
@@ -93,40 +64,27 @@ const EditResumeStyle = ({ route }) => {
 
     fetchResume();
   }, [resumeId]);
-
-  const updateBodyFontFamily = fontFamily => {
-    setBodyFontFamily(fontFamily);
-
-    setResumeCSS(prev =>
-      prev.replace(
-        /body\s*\{[^}]*\}/,
-        prev.match(/body\s*\{[^}]*\}/i)
-          ? prev.replace(
-              /font-family\s*:\s*[^;]+;/i,
-              `font-family: ${fontFamily};`,
-            )
-          : `body { font-family: ${fontFamily}; }`,
-      ),
-    );
+  const updateH1FontSize = value => {
+    setStyle(prev => ({
+      ...prev,
+      h1Size: value,
+    }));
   };
 
-  const updateH1FontSize = size => {
-    setH1Size(size);
-
-    setResumeCSS(prev =>
-      prev.replace(/h1\s*\{[^}]*\}/, `h1 { font-size: ${size}px; }`),
-    );
+  const updateFontFamily = value => {
+    setStyle(prev => ({
+      ...prev,
+      bodyFontFamily: value,
+    }));
   };
 
   const saveStyle = async () => {
     try {
       setSaving(true);
-      await axios.put(`${API_URL}/${resumeId}/style`, {
-        resumeCSS,
+      await axios.patch(`${API_URL}/${resumeId}/style`, {
+        resumeStyle: style,
       });
-      Alert.alert('Success', 'Style saved permanently');
-    } catch {
-      Alert.alert('Error', 'Failed to save style');
+      Alert.alert('Success', 'Style saved');
     } finally {
       setSaving(false);
     }
@@ -144,20 +102,21 @@ const EditResumeStyle = ({ route }) => {
     <SafeAreaView style={styles.container}>
       <WebView
         originWhitelist={['*']}
-        source={{ html: fusionResumeHTML(resume, resumeCSS) }}
+        source={{ html: fusionResumeHTML(resume, buildCSS(style)) }}
         style={styles.webview}
       />
 
       <View style={styles.controls}>
-        <Text>Name Font Size : {h1Size}</Text>
+        <Text>Name Font Size : {style.h1Size}</Text>
 
         <Slider
           minimumValue={40}
           maximumValue={90}
           step={1}
-          value={h1Size}
+          value={style.h1Size}
           onValueChange={updateH1FontSize}
         />
+
         <Text style={{ marginTop: 12 }}>Body Font Family</Text>
 
         <View
@@ -169,8 +128,8 @@ const EditResumeStyle = ({ route }) => {
           }}
         >
           <Picker
-            selectedValue={bodyFontFamily}
-            onValueChange={updateBodyFontFamily}
+            selectedValue={style.bodyFontFamily}
+            onValueChange={updateFontFamily}
           >
             {FONT_FAMILIES.map(font => (
               <Picker.Item
