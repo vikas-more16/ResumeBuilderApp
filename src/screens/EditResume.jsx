@@ -153,6 +153,17 @@ const EditResume = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <TouchableOpacity
+        style={styles.editSytleBtn}
+        activeOpacity={0.85}
+        onPress={() =>
+          navigation.navigate('EditResumeStyle', {
+            resumeId: resume._id,
+          })
+        }
+      >
+        <Text style={styles.previewText}>Edit Resume Style</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
         style={styles.previewBtn}
         activeOpacity={0.85}
         onPress={() =>
@@ -205,6 +216,16 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginHorizontal: 16,
     backgroundColor: '#111827',
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+  },
+  editSytleBtn: {
+    marginTop: 24,
+    marginHorizontal: 16,
+    backgroundColor: '#1555e0',
     paddingVertical: 14,
     borderRadius: 14,
     alignItems: 'center',

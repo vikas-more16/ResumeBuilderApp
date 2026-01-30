@@ -1,4 +1,4 @@
-export const fusionResumeHTML = (resume = {}) => {
+export const fusionResumeHTML = (resume = {}, cssOverride = '') => {
   const personal = resume.personalInfo || {};
 
   const fullName = `${personal.firstName || ''} ${
@@ -6,6 +6,8 @@ export const fusionResumeHTML = (resume = {}) => {
   }`.trim();
 
   const location = [personal.city, personal.country].filter(Boolean).join(', ');
+
+  const css = cssOverride || resume.resumeCSS || '';
 
   return `
 <!DOCTYPE html>
@@ -15,82 +17,44 @@ export const fusionResumeHTML = (resume = {}) => {
 <title>${resume.title || 'Resume'}</title>
 
 <style>
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 24px;
-    color: #222;
-  }
-
-  h1 {
-    margin-bottom: 4px;
-    font-size: 70px;
-    color: black;
-
-  }
-
-  .sub {
-    font-size: 30px;
-    color: #555;
-    margin-bottom: 12px;
-  }
-
-  .section {
-    margin-top: 22px;
-    font-weight: bold;
-    font-size: 45px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 4px;
-  }
-
-  .item {
-    margin-top: 10px;
-    font-size:35px;
-  }
-
-  .muted {
-    color: #666;
-    font-size: 30px;
-  }
-
-  ul {
-    margin: 6px 0 0 18px;
-  }
-    p ,li{
-    font-size:30px;
-    }
+${css}
 </style>
 </head>
 
 <body>
 
-  <h1>${fullName || ''}</h1>
+  <div class="header">
+    ${personal.photo ? `<img src="${personal.photo}" class="photo" />` : ''}
 
-  <div class="sub">
-    ${personal.jobTitle || ''}
-    ${personal.jobTitle ? ' | ' : ''}
-    ${personal.email || ''}
-    ${personal.email ? ' | ' : ''}
-    ${personal.phone || ''}
-    ${personal.phone ? ' | ' : ''}
-    ${location}
+    <div>
+      <h1>${fullName}</h1>
+      <div class="sub">
+        ${personal.jobTitle || ''}
+        ${personal.jobTitle ? ' | ' : ''}
+        ${personal.email || ''}
+        ${personal.email ? ' | ' : ''}
+        ${personal.phone || ''}
+        ${personal.phone ? ' | ' : ''}
+        ${location}
+      </div>
+    </div>
   </div>
-${
-  resume.socialLinks?.length
-    ? `<div class="section">Links</div>
+
+  ${
+    resume.socialLinks?.length
+      ? `<div class="section">Links</div>
          <ul>
            ${resume.socialLinks
              .map(
                link => `
-             <li>
-               ${link.network || ''} :
-               ${link.link || ''}
-             </li>
+             <li>${link.network || ''} : ${link.link || ''}</li>
            `,
              )
              .join('')}
          </ul>`
-    : ''
-}
+      : ''
+  }
+
   ${
     personal.summary
       ? `<div class="section">Summary</div>

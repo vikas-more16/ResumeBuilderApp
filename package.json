@@ -13,6 +13,7 @@
     "@joaosousa/react-native-progress-steps": "^0.4.0",
     "@notifee/react-native": "^9.1.8",
     "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-community/slider": "^5.1.2",
     "@react-native-firebase/app": "^23.8.3",
     "@react-native-firebase/auth": "^23.8.3",
     "@react-native-google-signin/google-signin": "^16.1.1",

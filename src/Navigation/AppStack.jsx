@@ -24,6 +24,7 @@ import EditExperience from '../screens/EditExperience';
 import ExperienceForm from '../screens/ExperienceForm';
 import EditSkills from '../screens/EditSkills';
 import SkillsForm from '../screens/SkillsForm';
+import EditResumeStyle from '../screens/EditResumeStyle';
 
 const Stack = createNativeStackNavigator();
 
@@ -102,6 +103,7 @@ const AppStack = () => {
       <Stack.Screen name="ExperienceForm" component={ExperienceForm} />
       <Stack.Screen name="EditSkills" component={EditSkills} />
       <Stack.Screen name="SkillsForm" component={SkillsForm} />
+      <Stack.Screen name="EditResumeStyle" component={EditResumeStyle} />
     </Stack.Navigator>
   );
 };
