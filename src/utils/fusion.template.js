@@ -45,7 +45,7 @@ ${css}
            ${resume.socialLinks
              .map(
                link => `
-             <li>${link.network || ''} : ${link.link || ''}</li>
+             <li class="sub">${link.network || ''} : ${link.link || ''}</li>
            `,
              )
              .join('')}

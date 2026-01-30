@@ -10,6 +10,16 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateExperience } from '../redux/actions/resume.actions';
+import { Picker } from '@react-native-picker/picker';
+
+const EMPLOYMENT_TYPES = [
+  { label: 'Select Employment Type', value: '' },
+  { label: 'Full-time', value: 'full-time' },
+  { label: 'Part-time', value: 'part-time' },
+  { label: 'Internship', value: 'internship' },
+  { label: 'Contract', value: 'contract' },
+  { label: 'Freelance', value: 'freelance' },
+];
 
 const ExperienceForm = ({ route, navigation }) => {
   const { resumeId, mode = 'add', index } = route.params || {};
@@ -98,12 +108,20 @@ const ExperienceForm = ({ route, navigation }) => {
           style={styles.input}
         />
 
-        <TextInput
-          placeholder="Employment Type (full-time, internship...)"
-          value={form.employmentType}
-          onChangeText={v => setForm({ ...form, employmentType: v })}
-          style={styles.input}
-        />
+        <View style={styles.pickerWrapper}>
+          <Picker
+            selectedValue={form.employmentType}
+            onValueChange={value => setForm({ ...form, employmentType: value })}
+          >
+            {EMPLOYMENT_TYPES.map(item => (
+              <Picker.Item
+                key={item.value}
+                label={item.label}
+                value={item.value}
+              />
+            ))}
+          </Picker>
+        </View>
 
         <TextInput
           placeholder="Company"
@@ -222,5 +240,17 @@ const styles = StyleSheet.create({
   deleteText: {
     color: '#b91c1c',
     fontWeight: '600',
+  },
+  pickerWrapper: {
+    backgroundColor: '#f9fafb',
+    borderRadius: 10,
+    marginBottom: 12,
+    overflow: 'hidden',
+  },
+  pickerWrapper: {
+    backgroundColor: '#f9fafb',
+    borderRadius: 10,
+    marginBottom: 12,
+    overflow: 'hidden',
   },
 });

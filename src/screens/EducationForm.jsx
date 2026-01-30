@@ -10,6 +10,15 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateEducation } from '../redux/actions/resume.actions';
+import { Picker } from '@react-native-picker/picker';
+
+const SCORE_TYPES = [
+  { label: 'Select Score Type', value: '' },
+  { label: 'Percentage', value: 'percentage' },
+  { label: 'CGPA', value: 'cgpa' },
+  { label: 'Grade', value: 'grade' },
+  { label: 'Other', value: 'other' },
+];
 
 const EducationForm = ({ route, navigation }) => {
   const { mode, education } = route.params || {};
@@ -98,15 +107,78 @@ const EducationForm = ({ route, navigation }) => {
           {mode === 'edit' ? 'Edit Education' : 'Add Education'}
         </Text>
 
-        {Object.keys(form).map(key => (
-          <TextInput
-            key={key}
-            placeholder={key}
-            value={form[key]}
-            onChangeText={text => setForm(prev => ({ ...prev, [key]: text }))}
-            style={styles.input}
-          />
-        ))}
+        <TextInput
+          placeholder="Program"
+          value={form.program}
+          onChangeText={v => setForm({ ...form, program: v })}
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Specialization"
+          value={form.specialization}
+          onChangeText={v => setForm({ ...form, specialization: v })}
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Institute"
+          value={form.institute}
+          onChangeText={v => setForm({ ...form, institute: v })}
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="City"
+          value={form.city}
+          onChangeText={v => setForm({ ...form, city: v })}
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Country"
+          value={form.country}
+          onChangeText={v => setForm({ ...form, country: v })}
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Start Year (YYYY)"
+          keyboardType="numeric"
+          value={form.startDate}
+          onChangeText={v => setForm({ ...form, startDate: v })}
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="End Year (YYYY)"
+          keyboardType="numeric"
+          value={form.endDate}
+          onChangeText={v => setForm({ ...form, endDate: v })}
+          style={styles.input}
+        />
+
+        <View style={styles.pickerWrapper}>
+          <Picker
+            selectedValue={form.scoreType}
+            onValueChange={value => setForm({ ...form, scoreType: value })}
+          >
+            {SCORE_TYPES.map(item => (
+              <Picker.Item
+                key={item.value}
+                label={item.label}
+                value={item.value}
+              />
+            ))}
+          </Picker>
+        </View>
+
+        <TextInput
+          placeholder="Score"
+          value={form.score}
+          onChangeText={v => setForm({ ...form, score: v })}
+          style={styles.input}
+        />
 
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
           <Text style={styles.saveText}>Save</Text>
@@ -149,4 +221,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   deleteText: { color: '#b91c1c', fontWeight: 'bold' },
+
+  pickerWrapper: {
+    backgroundColor: '#f9fafb',
+    borderRadius: 10,
+    marginBottom: 12,
+    overflow: 'hidden',
+  },
 });
