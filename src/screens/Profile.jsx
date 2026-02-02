@@ -7,7 +7,6 @@ import { logoutUser } from '../redux/actions/auth.actions';
 
 const Profile = () => {
   const user = useSelector(state => state.auth.user);
-  console.log(user);
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(logoutUser());

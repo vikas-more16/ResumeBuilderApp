@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   firebaseGoogleLogin,
@@ -67,7 +76,17 @@ export default function LoginScreen({ navigation }) {
         onPress={handleLogin}
         disabled={loading}
       />
-      <Button title="Login with Google" onPress={handleGoogleLogin} />
+      <TouchableOpacity
+        style={styles.googleBtn}
+        onPress={handleGoogleLogin}
+        activeOpacity={0.8}
+      >
+        <Image
+          source={require('../assets/google.png')}
+          style={styles.googleIcon}
+        />
+        <Text style={styles.googleText}>Sign in with Google</Text>
+      </TouchableOpacity>
 
       <Text style={styles.link} onPress={() => navigation.navigate('register')}>
         Create Account
@@ -86,4 +105,35 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   link: { marginTop: 20, color: 'blue', textAlign: 'center' },
+  googleBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+
+    // shadow (Android + iOS)
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.15,
+    shadowRadius: 2,
+  },
+
+  googleIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+  },
+
+  googleText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#111827',
+  },
 });
