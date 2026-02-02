@@ -146,16 +146,26 @@ export const updatePersonalInfo =
       const res = await axios.patch(
         `${API_URL}/${resumeId}/personal-info`,
         personalInfo,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
       );
 
       dispatch({
         type: UPDATE_PERSONAL_INFO_SUCCESS,
         payload: res.data.personalInfo,
       });
+
+      return true;
     } catch (error) {
       dispatch({
         type: UPDATE_PERSONAL_INFO_FAILURE,
-        payload: error.response?.data?.message || error.message,
+        payload:
+          error.response?.data?.message ||
+          error.message ||
+          'Failed to update profile',
       });
     }
   };
