@@ -13,12 +13,10 @@ import RNFS from 'react-native-fs';
 import { fusionResumeHTML } from '../utils/fusion.template';
 import { buildCSS } from '../utils/buildCSS';
 
-/* ================= API ================= */
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
 
 const DownloadResumeButton = ({ resumeId }) => {
   const [loading, setLoading] = useState(false);
-  const [style, setStyle] = useState(null);
 
   const downloadPDF = async () => {
     if (!resumeId) {
@@ -29,22 +27,19 @@ const DownloadResumeButton = ({ resumeId }) => {
     try {
       setLoading(true);
 
-      /* ---------- 1. FETCH RESUME ---------- */
       const res = await axios.get(`${API_URL}/${resumeId}`);
       const resume = res.data.resume;
-      setStyle(res.data.resume.resumeStyle);
 
       if (!resume) {
         throw new Error('Resume not found');
       }
 
-      /* ---------- 2. GENERATE HTML ---------- */
+      const style = resume.resumeStyle;
       const html = fusionResumeHTML(resume, buildCSS(style));
 
       const fileBaseName =
         resume.title?.trim().replace(/\s+/g, '_') || 'resume';
 
-      /* ---------- 3. GENERATE PDF ---------- */
       const options = {
         html,
         fileName: fileBaseName,
@@ -53,11 +48,9 @@ const DownloadResumeButton = ({ resumeId }) => {
 
       const file = await generatePDF(options);
 
-      /* ---------- 4. MOVE TO DOWNLOADS ---------- */
       const newPath = `${RNFS.DownloadDirectoryPath}/${fileBaseName}.pdf`;
       await RNFS.copyFile(file.filePath, newPath);
 
-      /* ---------- 5. NOTIFICATION ---------- */
       await notifee.displayNotification({
         title: 'Resume downloaded',
         body: `${fileBaseName}.pdf`,
