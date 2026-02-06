@@ -33,10 +33,10 @@ const DATA = [
     navigation: 'Jobs',
   },
   {
-    title: 'Find Internships',
-    subtitle: 'Discover opportunities matching your skills.',
+    title: 'AI Interview',
+    subtitle: 'Get Interview-Ready with AI',
     bg: '#88d2cc',
-    navigation: 'Internship',
+    navigation: 'GetStartScreen',
   },
 ];
 
