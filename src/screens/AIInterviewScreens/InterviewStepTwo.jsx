@@ -45,7 +45,7 @@ const InterviewStepTwo = ({ navigation }) => {
       {/* Form */}
       <View style={styles.formContainer}>
         {/* Domain */}
-        <Text style={styles.label}>Domain*</Text>
+        <Text style={styles.label}>Domain<Text style={{color:'#FE6B6B'}}>*</Text></Text>
         <TouchableOpacity
           style={styles.dropdown}
           onPress={() =>
@@ -80,7 +80,7 @@ const InterviewStepTwo = ({ navigation }) => {
         )}
 
         {/* Role */}
-        <Text style={styles.label}>Role*</Text>
+        <Text style={styles.label}>Role<Text style={{color:'#FE6B6B'}}>*</Text></Text>
         <TouchableOpacity
           style={styles.dropdown}
           onPress={() =>

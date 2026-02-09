@@ -66,7 +66,7 @@ const InterviewStepThree = ({ navigation }) => {
       {/* Form */}
       <View style={styles.formContainer}>
         {/* Interview Category */}
-        <Text style={styles.label}>Interview Category*</Text>
+        <Text style={styles.label}>Interview Category<Text style={{color:'#FE6B6B'}}>*</Text></Text>
 
         <View style={styles.radioRow}>
           <TouchableOpacity

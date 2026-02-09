@@ -46,7 +46,7 @@ const InterviewStepOne = ({ navigation }) => {
 
       <View style={styles.formContainer}>
         {/* Company Name */}
-        <Text style={styles.label}>Company Name*</Text>
+        <Text style={styles.label}>Company Name<Text style={{color:'#FE6B6B'}}>*</Text></Text>
         <TextInput
           style={styles.input}
           placeholder="Type here"
@@ -56,7 +56,7 @@ const InterviewStepOne = ({ navigation }) => {
         />
 
         {/* Interview Category */}
-        <Text style={styles.label}>Interview Category*</Text>
+        <Text style={styles.label}>Interview Category<Text style={{color:'#FE6B6B'}}>*</Text></Text>
 
         <View style={styles.categoryRow}>
           <TouchableOpacity
@@ -89,7 +89,7 @@ const InterviewStepOne = ({ navigation }) => {
         </View>
 
         {/* Interview Language */}
-        <Text style={styles.label}>Interview Language*</Text>
+        <Text style={styles.label}>Interview Language<Text style={{color:'#FE6B6B'}}>*</Text></Text>
 
         <TouchableOpacity
           style={styles.dropdown}
