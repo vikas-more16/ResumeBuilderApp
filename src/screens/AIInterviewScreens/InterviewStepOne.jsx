@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   },
 
   stepText: {
-    color: '#fb7185',
+    color: '#FF6652',
     fontSize: 15,
 
     marginBottom: 6,

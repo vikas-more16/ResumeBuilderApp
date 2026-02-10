@@ -29,6 +29,8 @@ import GetStartScreen from "../screens/AIInterviewScreens/GetStartScreen";
 import InterviewStepOne from '../screens/AIInterviewScreens/InterviewStepOne';
 import InterviewStepTwo from '../screens/AIInterviewScreens/InterviewStepTwo';
 import InterviewStepThree from '../screens/AIInterviewScreens/InterviewStepThree';
+import PracticeSession from '../screens/AIInterviewScreens/PracticeSession';
+import Feedback from '../screens/AIInterviewScreens/Feedback';
 
 const Stack = createNativeStackNavigator();
 
@@ -112,6 +114,8 @@ const AppStack = () => {
       <Stack.Screen name="InterviewStepOne" component={InterviewStepOne} options={{ headerShown: false }}/>
       <Stack.Screen name="InterviewStepTwo" component={InterviewStepTwo} options={{ headerShown: false }}/>
       <Stack.Screen name="InterviewStepThree" component={InterviewStepThree} options={{ headerShown: false }}/>
+      <Stack.Screen name="PracticeSession" component={PracticeSession} options={{ headerShown: false }}/>
+      <Stack.Screen name="Feedback" component={Feedback} options={{ headerShown: false }}/>
     </Stack.Navigator>
   );
 };

@@ -7,20 +7,51 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
 import Icon from 'react-native-vector-icons/Ionicons';
+
+const GradientIcon = ({ name, size = 18 }) => {
+  return (
+    <MaskedView
+      style={{ width: size, height: size }}
+      maskElement={
+        <View
+          style={{
+            width: size,
+            height: size,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Icon name={name} size={size} color="black" />
+        </View>
+      }
+    >
+      <LinearGradient
+        colors={['#FA71CD', '#6A3199']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ width: size, height: size }}
+      />
+    </MaskedView>
+  );
+};
 
 const GetStartScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity onPress={()=> navigation.goBack()}>
-      <View style={styles.backBtn}>
-        <Icon name="arrow-back" size={20} color="#000" />
-      </View>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <View style={styles.backBtn}>
+          <Icon name="arrow-back" size={20} color="#000" />
+        </View>
       </TouchableOpacity>
 
       <View style={styles.header}>
         <View style={styles.tag}>
-          <Text style={styles.tagText}>✨  AI Interview Preparation</Text>
+          <Text style={styles.tagText}>
+            <GradientIcon name="sparkles" size={18} />
+            AI Interview Preparation
+          </Text>
         </View>
       </View>
 
@@ -34,17 +65,16 @@ const GetStartScreen = ({ navigation }) => {
           <Text style={styles.subtitle}>
             Practice real interview questions & get instant feedback
           </Text>
-
         </View>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('InterviewStepOne')}
-          >
-            <View style={styles.buttonContent}>
-              <Text style={styles.buttonText}>Start Your Prep</Text>
-              <Icon name="arrow-forward" size={18} color="#fff" />
-            </View>
-          </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('InterviewStepOne')}
+        >
+          <View style={styles.buttonContent}>
+            <Text style={styles.buttonText}>Start Your Prep</Text>
+            <Icon name="arrow-forward" size={18} color="#fff" />
+          </View>
+        </TouchableOpacity>
       </LinearGradient>
     </ScrollView>
   );
@@ -83,8 +113,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 
-  tagText:{
-       fontSize:13,
+  tagText: {
+    fontSize: 13,
   },
 
   bottomContainer: {

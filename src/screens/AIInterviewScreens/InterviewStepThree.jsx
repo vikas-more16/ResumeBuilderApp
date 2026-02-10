@@ -149,7 +149,7 @@ const InterviewStepThree = ({ navigation }) => {
         )}
 
         {/* Button */}
-        <TouchableOpacity style={styles.nextBtn}>
+        <TouchableOpacity style={styles.nextBtn} onPress={()=> navigation.navigate('PracticeSession')}>
           <Text style={styles.nextText}>
             {category === 'jd' ? 'Start Interview' : 'Next'}
           </Text>
@@ -226,7 +226,7 @@ counterText: {
   },
 
   stepText: {
-    color: '#fb7185',
+    color: '#FF6652',
     fontSize: 15,
     marginBottom: 6,
   },
