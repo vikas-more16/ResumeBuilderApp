@@ -2,6 +2,7 @@ export const fusionResumeHTML = (
   resume = {},
   css = '',
   qr = '',
+  verificationCode='',
 ) => {
   const personal = resume.personalInfo || {};
 
@@ -10,14 +11,14 @@ export const fusionResumeHTML = (
 
   const location = [personal.city, personal.country].filter(Boolean).join(', ');
 
-  // Generate verification code (simple hash-like token)
-  const generateVerificationCode = () => {
-    const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const timePart = Date.now().toString(36).toUpperCase();
-    return `VR-${randomPart}${timePart}`;
-  };
+  // // Generate verification code (simple hash-like token)
+  // const generateVerificationCode = () => {
+  //   const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
+  //   const timePart = Date.now().toString(36).toUpperCase();
+  //   return `VR-${randomPart}${timePart}`;
+  // };
 
-  const verificationCode = generateVerificationCode();
+  // const verificationCode = generateVerificationCode();
 
 
   return `

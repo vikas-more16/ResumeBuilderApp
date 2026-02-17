@@ -15,22 +15,48 @@ const ResumePreview = ({ route }) => {
   const [resume, setResume] = useState(null);
   const [loading, setLoading] = useState(true);
   const [style, setStyle] = useState(null);
+  const [qrBase64, setQrBase64] = useState(null);
+  const [verifiedId, setVerifiedId] = useState(null);
 
-  useEffect(() => {
-    const fetchResume = async () => {
-      try {
-        const res = await axios.get(`${API_URL}/${resumeId}`);
-        setResume(res.data.resume);
-        setStyle(res.data.resume.resumeStyle);
-      } catch (error) {
-        Alert.alert('Error', 'Failed to load resume');
-      } finally {
-        setLoading(false);
+
+useEffect(() => {
+  const fetchResume = async () => {
+    try {
+      // 1️⃣ Fetch draft resume
+      const res = await axios.get(`${API_URL}/${resumeId}`);
+      const resumeData = res.data.resume;
+
+      setResume(resumeData);
+      setStyle(resumeData.resumeStyle);
+
+      // 2️⃣ Check if already finalized
+      const checkRes = await axios.get(
+        `${API_URL}/${resumeId}/check-finalized`,
+      );
+
+      if (checkRes.data.finalized) {
+        setQrBase64(checkRes.data.qrBase64);
+        setVerifiedId(checkRes.data.resumeId);
+      } else {
+        // 3️⃣ Finalize once
+        const finalizeRes = await axios.post(
+          `${API_URL}/${resumeId}/finalize`,
+          resumeData,
+        );
+
+        setQrBase64(finalizeRes.data.qrBase64);
+        setVerifiedId(finalizeRes.data.resumeId);
       }
-    };
+    } catch (error) {
+      Alert.alert('Error', 'Failed to load resume');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchResume();
-  }, [resumeId]);
+  fetchResume();
+}, [resumeId]);
+
 
   if (loading) {
     return (
@@ -47,7 +73,9 @@ const ResumePreview = ({ route }) => {
       {/* ===== PREVIEW ===== */}
       <WebView
         originWhitelist={['*']}
-        source={{ html: fusionResumeHTML(resume, buildCSS(style)) }}
+        source={{
+          html: fusionResumeHTML(resume, buildCSS(style), qrBase64, verifiedId),
+        }}
         style={styles.webview}
       />
 

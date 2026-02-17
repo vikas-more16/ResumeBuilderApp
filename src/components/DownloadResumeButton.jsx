@@ -12,7 +12,6 @@ import { generatePDF } from 'react-native-html-to-pdf';
 import RNFS from 'react-native-fs';
 import { fusionResumeHTML } from '../utils/fusion.template';
 import { buildCSS } from '../utils/buildCSS';
-import QRCode from 'react-native-qrcode-svg';
 
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
 
