@@ -5,24 +5,111 @@ body {
   position: relative;
 }
 
-/* WATERMARK */
-.watermark {
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-30deg);
-  font-size: 80px;
-  color: rgba(0, 0, 0, 0.05);
-  white-space: nowrap;
-  pointer-events: none;
+/* ===== Layering Structure ===== */
+
+body {
+  font-family: ${s.bodyFontFamily};
+  color: ${s.bodyColor};
+  position: relative;
   z-index: 0;
 }
+  /* ===== Top Left Increasing Phone Number ===== */
+.corner-phone {
+  position: fixed;
+  top: 10px;
+  left: 800px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.15);
+  z-index: 3;
+  letter-spacing: 2px;
+  pointer-events: none;
+}
+
+
+/* ===== Bottom Layer: Repeating Text ===== */
+.watermark-text-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.watermark-text {
+  position: absolute;
+  width: 300%;
+  top: -30%;
+  left: -80%;
+  font-size: 50px;
+  color: rgba(0, 0, 0, 0.03);
+  transform: rotate(-45deg);
+  line-height: 100px;
+}
+
+/* ===== Middle Layer: Center Logo ===== */
+.watermark-logo-layer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* White shield to block text behind */
+.watermark-logo-shield {
+  width: 340px;
+  height: 340px;
+  background-color: white;
+  border-radius: 50%;   /* makes circular clean zone */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+}
+
+/* Actual logo */
+.watermark-logo {
+  width: 280px;
+  height: 280px;
+  opacity: 0.1;
+  object-fit: contain;
+}
+
+
+/* ===== Top Layer: Main Content ===== */
+.content-layer {
+  position: relative;
+  z-index: 2;
+}
+
 
 /* Make content above watermark */
 .header, .section, .item, .verification {
   position: relative;
   z-index: 1;
 }
+  /* ===== Name Container ===== */
+.name-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* ===== Microtext Layer ===== */
+.microtext {
+  position: absolute;
+  top: -6px;
+  left: 0;
+  font-size: 6px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  color: rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
 
 h1 {
   font-size: ${s.h1Size}px;
@@ -57,25 +144,46 @@ h1 {
   object-fit: cover;
 }
 
-/* VERIFICATION FOOTER */
+/* ===== Bottom Center Verification Footer ===== */
 .verification {
-  margin-top: 40px;
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 11px;
   text-align: center;
   color: #777;
   border-top: 1px solid #ddd;
-  padding-top: 8px;
-},
+  padding-top: 6px;
+  width: 60%;
+}
+
+/* ===== Bottom Right QR ===== */
 .qr-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
+  z-index: 3;
 }
 
 .qr {
   width: 100px;
   height: 100px;
 }
+
+/* ===== Bottom Left Barcode ===== */
+.barcode-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 3;
+}
+
+.barcode-img {
+  width: 250px;
+  height: 50px;
+}
+
 
 `;
 

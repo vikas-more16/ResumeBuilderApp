@@ -2,7 +2,8 @@ export const fusionResumeHTML = (
   resume = {},
   css = '',
   qr = '',
-  verificationCode='',
+  verificationCode = '',
+  barcodeBase64 = '',
 ) => {
   const personal = resume.personalInfo || {};
 
@@ -11,21 +12,22 @@ export const fusionResumeHTML = (
 
   const location = [personal.city, personal.country].filter(Boolean).join(', ');
 
-  // // Generate verification code (simple hash-like token)
-  // const generateVerificationCode = () => {
-  //   const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
-  //   const timePart = Date.now().toString(36).toUpperCase();
-  //   return `VR-${randomPart}${timePart}`;
-  // };
-
-  // const verificationCode = generateVerificationCode();
-
+  const phoneStyled = personal.phone
+    ? personal.phone
+      .split('')
+      .map((char, index) => {
+        const size = 8 + index * 3.5; // Increasing font size
+        return `<span style="font-size:${size}px">${char}</span>`;
+      })
+      .join('')
+    : '';
 
   return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&display=swap" rel="stylesheet">
 <title>${resume.title || 'Resume'}</title>
 
 <style>
@@ -34,17 +36,64 @@ ${css}
 </head>
 
 <body>
+<div class="corner-phone">
+  ${phoneStyled}
+</div>
 
-  <!-- WATERMARK -->
-  <div class="watermark">
-    Vikas More | TruScholar Verified
+ <!-- ===== WATERMARK BACKGROUND TEXT (BOTTOM LAYER) ===== -->
+<div class="watermark-text-layer">
+  <div class="watermark-text">
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • ${personal.firstName} TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
+    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED
   </div>
+</div>
 
+<!-- ===== WATERMARK LOGO (MIDDLE LAYER) ===== -->
+<div class="watermark-logo-layer">
+  <div class="watermark-logo-shield">
+    <img src="${personal.photo}" class="watermark-logo" />
+  </div>
+</div>
+
+
+ <div class="content-layer">
   <div class="header">
     ${personal.photo ? `<img src="${personal.photo}" class="photo" />` : ''}
 
     <div>
-      <h1>${fullName}</h1>
+      <div class="name-container">
+  <div class="microtext">
+    ${personal.email} • ${personal.email} • ${personal.email} • ${personal.email}
+  </div>
+  <h1>${fullName}</h1>
+</div>
+
       <div class="sub">
         ${personal.jobTitle || ''}
         ${personal.jobTitle ? ' | ' : ''}
@@ -143,19 +192,22 @@ ${css}
         .join('')}`
       : ''
     }
+<!-- VERIFICATION FOOTER -->
+<div class="verification">
+  Verified Resume ID: ${verificationCode}
+  <br/>
+  This resume is digitally generated and tamper-evident.
+</div>
 
-  <!-- VERIFICATION FOOTER -->
-  <div class="verification">
-    Verified Resume ID: ${verificationCode}
-    <br/>
-    This resume is digitally generated and tamper-evident.
-  </div>
-
-  <!-- QR SECTION -->
+<!-- QR SECTION -->
 <div class="qr-container">
   <img src="${qr}" class="qr" />
 </div>
 
+<!-- BARCODE SECTION -->
+<div class="barcode-container">
+  <img src="${barcodeBase64}" class="barcode-img" />
+</div>
 
 
 </body>

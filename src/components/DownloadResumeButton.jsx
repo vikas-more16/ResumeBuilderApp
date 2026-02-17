@@ -40,18 +40,22 @@ const DownloadResumeButton = ({ resumeId }) => {
         `${API_URL}/${resumeId}/finalize`,
         resume, // 🔥 THIS WAS MISSING
       );
-      const { resumeId: verifiedId, qrBase64 } = finalizeRes.data;
-
+      const {
+        resumeId: verifiedId,
+        qrBase64,
+        barcodeBase64,
+      } = finalizeRes.data;
 
       const style = resume.resumeStyle;
       // Verification URL
       const verifyURL = `https://resumebuilderappbakend.onrender.com/api/resumes/verify/${verifiedId}`;
-     const html = fusionResumeHTML(
-       resume,
-       buildCSS(style),
-       qrBase64,
-       verifiedId,
-     );
+      const html = fusionResumeHTML(
+        resume,
+        buildCSS(style),
+        qrBase64,
+        verifiedId,
+        barcodeBase64,
+      );
 
       console.log('12');
 

@@ -17,46 +17,47 @@ const ResumePreview = ({ route }) => {
   const [style, setStyle] = useState(null);
   const [qrBase64, setQrBase64] = useState(null);
   const [verifiedId, setVerifiedId] = useState(null);
+  const [barcodeBase64, setbarcodeBase64] = useState(null);
 
+  useEffect(() => {
+    const fetchResume = async () => {
+      try {
+        // 1️⃣ Fetch draft resume
+        const res = await axios.get(`${API_URL}/${resumeId}`);
+        const resumeData = res.data.resume;
 
-useEffect(() => {
-  const fetchResume = async () => {
-    try {
-      // 1️⃣ Fetch draft resume
-      const res = await axios.get(`${API_URL}/${resumeId}`);
-      const resumeData = res.data.resume;
+        setResume(resumeData);
+        setStyle(resumeData.resumeStyle);
 
-      setResume(resumeData);
-      setStyle(resumeData.resumeStyle);
-
-      // 2️⃣ Check if already finalized
-      const checkRes = await axios.get(
-        `${API_URL}/${resumeId}/check-finalized`,
-      );
-
-      if (checkRes.data.finalized) {
-        setQrBase64(checkRes.data.qrBase64);
-        setVerifiedId(checkRes.data.resumeId);
-      } else {
-        // 3️⃣ Finalize once
-        const finalizeRes = await axios.post(
-          `${API_URL}/${resumeId}/finalize`,
-          resumeData,
+        // 2️⃣ Check if already finalized
+        const checkRes = await axios.get(
+          `${API_URL}/${resumeId}/check-finalized`,
         );
 
-        setQrBase64(finalizeRes.data.qrBase64);
-        setVerifiedId(finalizeRes.data.resumeId);
+        if (checkRes.data.finalized) {
+          setQrBase64(checkRes.data.qrBase64);
+          setVerifiedId(checkRes.data.resumeId);
+          setbarcodeBase64(checkRes.data.barcodeBase64);
+        } else {
+          // 3️⃣ Finalize once
+          const finalizeRes = await axios.post(
+            `${API_URL}/${resumeId}/finalize`,
+            resumeData,
+          );
+
+          setQrBase64(finalizeRes.data.qrBase64);
+          setVerifiedId(finalizeRes.data.resumeId);
+          setbarcodeBase64(finalizeRes.data.barcodeBase64);
+        }
+      } catch (error) {
+        Alert.alert('Error', 'Failed to load resume');
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to load resume');
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchResume();
-}, [resumeId]);
-
+    fetchResume();
+  }, [resumeId]);
 
   if (loading) {
     return (
@@ -74,7 +75,13 @@ useEffect(() => {
       <WebView
         originWhitelist={['*']}
         source={{
-          html: fusionResumeHTML(resume, buildCSS(style), qrBase64, verifiedId),
+          html: fusionResumeHTML(
+            resume,
+            buildCSS(style),
+            qrBase64,
+            verifiedId,
+            barcodeBase64,
+          ),
         }}
         style={styles.webview}
       />
