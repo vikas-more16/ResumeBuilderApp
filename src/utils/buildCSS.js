@@ -29,23 +29,18 @@ body {
 /* ===== Bottom Layer: Repeating Text ===== */
 .watermark-text-layer {
   position: fixed;
-  top: 0;
-  left: 0;
+  left:3%;
   width: 100%;
   height: 100%;
   pointer-events: none;
   z-index: 0;
-  overflow: hidden;
 }
 
 .watermark-text {
   position: absolute;
-  width: 300%;
-  top: -30%;
-  left: -80%;
-  font-size: 50px;
-  color: rgba(0, 0, 0, 0.03);
-  transform: rotate(-45deg);
+  margin-top:10px;
+  font-size: 40px;
+  color: rgba(0, 0, 0,0.05);
   line-height: 100px;
 }
 
