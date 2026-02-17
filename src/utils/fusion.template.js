@@ -1,11 +1,24 @@
-export const fusionResumeHTML = (resume = {}, css = '') => {
+export const fusionResumeHTML = (
+  resume = {},
+  css = '',
+  qr = '',
+) => {
   const personal = resume.personalInfo || {};
 
-  const fullName = `${personal.firstName || ''} ${
-    personal.lastName || ''
-  }`.trim();
+  const fullName = `${personal.firstName || ''} ${personal.lastName || ''
+    }`.trim();
 
   const location = [personal.city, personal.country].filter(Boolean).join(', ');
+
+  // Generate verification code (simple hash-like token)
+  const generateVerificationCode = () => {
+    const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const timePart = Date.now().toString(36).toUpperCase();
+    return `VR-${randomPart}${timePart}`;
+  };
+
+  const verificationCode = generateVerificationCode();
+
 
   return `
 <!DOCTYPE html>
@@ -20,6 +33,11 @@ ${css}
 </head>
 
 <body>
+
+  <!-- WATERMARK -->
+  <div class="watermark">
+    Vikas More | TruScholar Verified
+  </div>
 
   <div class="header">
     ${personal.photo ? `<img src="${personal.photo}" class="photo" />` : ''}
@@ -38,34 +56,31 @@ ${css}
     </div>
   </div>
 
-  ${
-    resume.socialLinks?.length
+  ${resume.socialLinks?.length
       ? `<div class="section">Links</div>
          <ul>
            ${resume.socialLinks
-             .map(
-               link => `
+        .map(
+          link => `
              <li class="sub">${link.network || ''} : ${link.link || ''}</li>
            `,
-             )
-             .join('')}
+        )
+        .join('')}
          </ul>`
       : ''
-  }
+    }
 
-  ${
-    personal.summary
+  ${personal.summary
       ? `<div class="section">Summary</div>
          <p class="muted">${personal.summary}</p>`
       : ''
-  }
+    }
 
-  ${
-    resume.education?.length
+  ${resume.education?.length
       ? `<div class="section">Education</div>
          ${resume.education
-           .map(
-             edu => `
+        .map(
+          edu => `
            <div class="item">
              <strong>${edu.program || ''}</strong>
              ${edu.specialization ? ` - ${edu.specialization}` : ''}
@@ -81,17 +96,16 @@ ${css}
              </div>
            </div>
          `,
-           )
-           .join('')}`
+        )
+        .join('')}`
       : ''
-  }
+    }
 
-  ${
-    resume.experience?.length
+  ${resume.experience?.length
       ? `<div class="section">Experience</div>
          ${resume.experience
-           .map(
-             exp => `
+        .map(
+          exp => `
            <div class="item">
              <strong>${exp.jobTitle || ''}</strong>
              ${exp.company ? ` - ${exp.company}` : ''}
@@ -107,17 +121,16 @@ ${css}
              ${exp.description ? `<p>${exp.description}</p>` : ''}
            </div>
          `,
-           )
-           .join('')}`
+        )
+        .join('')}`
       : ''
-  }
+    }
 
-  ${
-    resume.skills?.length
+  ${resume.skills?.length
       ? `<div class="section">Skills</div>
          ${resume.skills
-           .map(
-             skill => `
+        .map(
+          skill => `
            <div class="item">
              <strong>${skill.category || ''}</strong>
              <div class="muted">
@@ -125,10 +138,24 @@ ${css}
              </div>
            </div>
          `,
-           )
-           .join('')}`
+        )
+        .join('')}`
       : ''
-  }
+    }
+
+  <!-- VERIFICATION FOOTER -->
+  <div class="verification">
+    Verified Resume ID: ${verificationCode}
+    <br/>
+    This resume is digitally generated and tamper-evident.
+  </div>
+
+  <!-- QR SECTION -->
+<div class="qr-container">
+  <img src="${qr}" class="qr" />
+</div>
+
+
 
 </body>
 </html>

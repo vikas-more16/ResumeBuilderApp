@@ -12,6 +12,7 @@ import { generatePDF } from 'react-native-html-to-pdf';
 import RNFS from 'react-native-fs';
 import { fusionResumeHTML } from '../utils/fusion.template';
 import { buildCSS } from '../utils/buildCSS';
+import QRCode from 'react-native-qrcode-svg';
 
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
 
@@ -27,6 +28,7 @@ const DownloadResumeButton = ({ resumeId }) => {
     try {
       setLoading(true);
 
+      // STEP 1: Fetch Resume Data FIRST
       const res = await axios.get(`${API_URL}/${resumeId}`);
       const resume = res.data.resume;
 
@@ -34,8 +36,25 @@ const DownloadResumeButton = ({ resumeId }) => {
         throw new Error('Resume not found');
       }
 
+      // STEP 2: Send resumeData to finalize API
+      const finalizeRes = await axios.post(
+        `${API_URL}/${resumeId}/finalize`,
+        resume, // 🔥 THIS WAS MISSING
+      );
+      const { resumeId: verifiedId, qrBase64 } = finalizeRes.data;
+
+
       const style = resume.resumeStyle;
-      const html = fusionResumeHTML(resume, buildCSS(style));
+      // Verification URL
+      const verifyURL = `https://resumebuilderappbakend.onrender.com/api/resumes/verify/${verifiedId}`;
+     const html = fusionResumeHTML(
+       resume,
+       buildCSS(style),
+       qrBase64,
+       verifiedId,
+     );
+
+      console.log('12');
 
       const fileBaseName =
         resume.title?.trim().replace(/\s+/g, '_') || 'resume';
@@ -45,9 +64,10 @@ const DownloadResumeButton = ({ resumeId }) => {
         fileName: fileBaseName,
         directory: 'Documents',
       };
+      console.log('13');
 
       const file = await generatePDF(options);
-
+      console.log('14');
       const newPath = `${RNFS.DownloadDirectoryPath}/${fileBaseName}.pdf`;
       await RNFS.copyFile(file.filePath, newPath);
 
