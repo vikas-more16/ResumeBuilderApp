@@ -6,10 +6,17 @@ import { WebView } from 'react-native-webview';
 import DownloadResumeButton from '../components/DownloadResumeButton';
 import { fusionResumeHTML } from '../utils/fusion.template';
 import { buildCSS } from '../utils/buildCSS';
+import { Dimensions } from 'react-native';
+
+const { width } = Dimensions.get('window');
 
 const API_URL = 'http://10.0.2.2:5000/api/resumes';
 
 const ResumePreview = ({ route }) => {
+  const A4_RATIO = 1.414;
+  const previewWidth = width; // margin
+  const previewHeight = previewWidth * A4_RATIO;
+
   const { resumeId } = route.params;
 
   const [resume, setResume] = useState(null);
@@ -69,6 +76,27 @@ const ResumePreview = ({ route }) => {
 
   if (!resume) return null;
 
+  const watermarkConfig = {
+    defaultText: 'UTKAL UNIVERSITY',
+    fontSize: 8,
+    rows: 70,
+    columns: 5,
+
+    rowOverrides: [
+      { index: 15, text: resume.personalInfo?.firstName || 'STUDENT_NAME' },
+      { index: 25, text: resume.education?.[0]?.program || 'COURSE_NAME' },
+      {
+        index: 30,
+        text: resume.personalInfo?.phone || 'PHONE_NO',
+      },
+    ],
+
+    colOverrides: [
+      // optional
+      // { index: 5, text: "SPECIAL_COLUMN" }
+    ],
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* ===== PREVIEW ===== */}
@@ -81,9 +109,14 @@ const ResumePreview = ({ route }) => {
             qrBase64,
             verifiedId,
             barcodeBase64,
+            watermarkConfig,
           ),
         }}
-        style={styles.webview}
+        style={{
+          width: '21cm', // A4 width
+          height: '29.7cm', // A4 height
+          backgroundColor: '#fff',
+        }}
       />
 
       {/* ===== DOWNLOAD ===== */}

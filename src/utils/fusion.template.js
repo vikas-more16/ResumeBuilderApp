@@ -4,6 +4,7 @@ export const fusionResumeHTML = (
   qr = '',
   verificationCode = '',
   barcodeBase64 = '',
+  config = '',
 ) => {
   const personal = resume.personalInfo || {};
 
@@ -21,6 +22,50 @@ export const fusionResumeHTML = (
       })
       .join('')
     : '';
+
+  function generateWatermarkGrid(config) {
+    const {
+      defaultText,
+      fontSize,
+      rows,
+      columns,
+      rowOverrides = [],
+      colOverrides = []
+    } = config;
+
+    const rowMap = {};
+    rowOverrides.forEach(r => rowMap[r.index] = r.text);
+
+    const colMap = {};
+    colOverrides.forEach(c => colMap[c.index] = c.text);
+
+    let html = "";
+
+    for (let i = 1; i <= rows; i++) {
+      html += `<div class="wm-row">`;
+
+      for (let j = 1; j <= columns; j++) {
+
+        let cellText = defaultText;
+
+        if (rowMap[i]) {
+          cellText = rowMap[i];
+        }
+
+        if (colMap[j]) {
+          cellText = colMap[j];
+        }
+
+        html += `<span>${cellText}</span>`;
+      }
+
+      html += `</div>`;
+    }
+
+    return html;
+  }
+
+  const watermarkHTML = generateWatermarkGrid(config);
 
   return `
 <!DOCTYPE html>
@@ -42,36 +87,21 @@ ${css}
 
  <!-- ===== WATERMARK BACKGROUND TEXT (BOTTOM LAYER) ===== -->
 <div class="watermark-text-layer">
-  <div class="watermark-text">
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • ${personal.firstName} TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-    TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED • TRUSCHOLAR VERIFIED •
-  </div>
+    ${watermarkHTML}
 </div>
 
 <!-- ===== WATERMARK LOGO (MIDDLE LAYER) ===== -->
 <div class="watermark-logo-layer">
   <div class="watermark-logo-shield">
-    <img src="${personal.photo}" class="watermark-logo" />
+    <div class="watermark-photo-wrapper">
+      <img src="${personal.photo}" class="watermark-logo" />
+      <div class="watermark-overlay-text">
+        TRUSCHOLAR VERIFIED
+      </div>
+    </div>
   </div>
 </div>
+
 
 
  <div class="content-layer">

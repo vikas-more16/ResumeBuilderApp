@@ -26,25 +26,29 @@ body {
 }
 
 
-/* ===== Bottom Layer: Repeating Text ===== */
+/* ===== Watermark Grid Layer ===== */
 .watermark-text-layer {
   position: fixed;
-  left:3%;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  padding:10px;
+  overflow: hidden;
   pointer-events: none;
   z-index: 0;
 }
 
-.watermark-text {
-  position: absolute;
-  margin-top:10px;
-  font-size: 40px;
-  color: rgba(0, 0, 0,0.05);
-  line-height: 100px;
+.wm-row {
+  white-space: nowrap;
+  line-height: 21.3px;
 }
 
-/* ===== Middle Layer: Center Logo ===== */
+.wm-row span {
+  font-size: 20px;
+  color: rgba(0, 0, 0,0.07);
+  margin-right: 20px;
+}
+
+
+/* ===== Center Logo Layer ===== */
 .watermark-logo-layer {
   position: fixed;
   top: 50%;
@@ -54,25 +58,49 @@ body {
   z-index: 1;
 }
 
-/* White shield to block text behind */
+/* Circular shield */
 .watermark-logo-shield {
   width: 340px;
   height: 340px;
   background-color: white;
-  border-radius: 50%;   /* makes circular clean zone */
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
-/* Actual logo */
-.watermark-logo {
+/* Wrapper for image + overlay */
+.watermark-photo-wrapper {
+  position: relative;
   width: 280px;
   height: 280px;
-  opacity: 0.1;
-  object-fit: contain;
 }
+
+/* Actual photo */
+.watermark-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.15;   /* faint watermark look */
+  border-radius: 50%;
+}
+
+/* Overlay text */
+.watermark-overlay-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.05);
+  transform: rotate(-30deg);
+  letter-spacing: 2px;
+}
+
 
 
 /* ===== Top Layer: Main Content ===== */
@@ -148,7 +176,6 @@ h1 {
   font-size: 11px;
   text-align: center;
   color: #777;
-  border-top: 1px solid #ddd;
   padding-top: 6px;
   width: 60%;
 }

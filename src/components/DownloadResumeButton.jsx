@@ -34,6 +34,26 @@ const DownloadResumeButton = ({ resumeId }) => {
       if (!resume) {
         throw new Error('Resume not found');
       }
+      const watermarkConfig = {
+        defaultText: 'UTKAL UNIVERSITY',
+        fontSize: 8,
+        rows: 68,
+        columns: 5,
+
+        rowOverrides: [
+          { index: 15, text: resume.personalInfo?.firstName || 'STUDENT_NAME' },
+          { index: 25, text: resume.education?.[0]?.program || 'COURSE_NAME' },
+          {
+            index: 30,
+            text: resume.personalInfo?.phone || 'PHONE_NO',
+          },
+        ],
+
+        colOverrides: [
+          // optional
+          // { index: 5, text: "SPECIAL_COLUMN" }
+        ],
+      };
 
       // STEP 2: Send resumeData to finalize API
       const finalizeRes = await axios.post(
@@ -55,22 +75,22 @@ const DownloadResumeButton = ({ resumeId }) => {
         qrBase64,
         verifiedId,
         barcodeBase64,
+        watermarkConfig,
       );
-
-      console.log('12');
 
       const fileBaseName =
         resume.title?.trim().replace(/\s+/g, '_') || 'resume';
-
       const options = {
         html,
         fileName: fileBaseName,
         directory: 'Documents',
-      };
-      console.log('13');
 
+        width: 740,
+        height: 1123,
+
+        padding: 0,
+      };
       const file = await generatePDF(options);
-      console.log('14');
       const newPath = `${RNFS.DownloadDirectoryPath}/${fileBaseName}.pdf`;
       await RNFS.copyFile(file.filePath, newPath);
 
