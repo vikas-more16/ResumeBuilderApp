@@ -76,25 +76,58 @@ const ResumePreview = ({ route }) => {
 
   if (!resume) return null;
 
+  function calculateGrid(defaultText, fontSize) {
+    const A4_WIDTH = 411.4;
+    const A4_HEIGHT = 627.8;
+
+    const PX_TO_PREVIEW = 0.4534;
+
+    const lineHeightPx = fontSize * 1.065;
+    const lineHeightPreview = lineHeightPx * PX_TO_PREVIEW;
+
+    const rows = Math.floor(A4_HEIGHT / lineHeightPreview);
+
+    const approxCharWidthPx = fontSize * 0.4;
+
+    const textWidthPreview =
+      approxCharWidthPx * defaultText.length * PX_TO_PREVIEW;
+
+    const horizontalSpacingPreview = fontSize * 2 * PX_TO_PREVIEW;
+
+    const totalBlockWidth = textWidthPreview + horizontalSpacingPreview;
+
+    const columns = Math.floor(A4_WIDTH / totalBlockWidth);
+
+    return { rows, columns, lineHeightPx, horizontalSpacingPreview };
+  }
+
+  const defaultText = 'UTKAL UNIVERSITY';
+  const fontSize = 40;
+
+  const { rows, columns, lineHeightPx, horizontalSpacingPreview } =
+    calculateGrid(defaultText, fontSize);
+
+  console.log('====================================');
+  console.log(rows, columns);
+  console.log('====================================');
+  const watermartSytle = {
+    fontSize: fontSize,
+    lineHeightPx: lineHeightPx,
+    horizontalSpacingPreview: horizontalSpacingPreview,
+  };
   const watermarkConfig = {
-    defaultText: 'UTKAL UNIVERSITY',
-    fontSize: 8,
-    rows: 70,
-    columns: 5,
+    defaultText,
+    fontSize,
+    rows,
+    columns,
 
     rowOverrides: [
       { index: 15, text: resume.personalInfo?.firstName || 'STUDENT_NAME' },
       { index: 25, text: resume.education?.[0]?.program || 'COURSE_NAME' },
-      {
-        index: 30,
-        text: resume.personalInfo?.phone || 'PHONE_NO',
-      },
+      { index: 40, text: resume.personalInfo?.phone || 'PHONE_NO' },
     ],
 
-    colOverrides: [
-      // optional
-      // { index: 5, text: "SPECIAL_COLUMN" }
-    ],
+    colOverrides: [],
   };
 
   return (
@@ -105,7 +138,7 @@ const ResumePreview = ({ route }) => {
         source={{
           html: fusionResumeHTML(
             resume,
-            buildCSS(style),
+            buildCSS(style, watermartSytle),
             qrBase64,
             verifiedId,
             barcodeBase64,

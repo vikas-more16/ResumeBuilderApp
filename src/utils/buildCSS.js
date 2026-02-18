@@ -1,4 +1,4 @@
-export const buildCSS = s => `
+export const buildCSS = (s = {}, watermartSytle = {}) => `
 body {
   font-family: ${s.bodyFontFamily};
   color: ${s.bodyColor};
@@ -38,13 +38,13 @@ body {
 
 .wm-row {
   white-space: nowrap;
-  line-height: 21.3px;
+  line-height: ${watermartSytle.lineHeightPx}px;
 }
 
 .wm-row span {
-  font-size: 20px;
-  color: rgba(0, 0, 0,0.07);
-  margin-right: 20px;
+  font-size: ${watermartSytle.fontSize}px;
+  color: rgba(0, 0, 0);
+  margin-right: ${watermartSytle.horizontalSpacingPreview}px;
 }
 
 
