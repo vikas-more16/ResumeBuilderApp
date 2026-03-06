@@ -25,12 +25,13 @@ import ExperienceForm from '../screens/ExperienceForm';
 import EditSkills from '../screens/EditSkills';
 import SkillsForm from '../screens/SkillsForm';
 import EditResumeStyle from '../screens/EditResumeStyle';
-import GetStartScreen from "../screens/AIInterviewScreens/GetStartScreen";
+import GetStartScreen from '../screens/AIInterviewScreens/GetStartScreen';
 import InterviewStepOne from '../screens/AIInterviewScreens/InterviewStepOne';
 import InterviewStepTwo from '../screens/AIInterviewScreens/InterviewStepTwo';
 import InterviewStepThree from '../screens/AIInterviewScreens/InterviewStepThree';
 import PracticeSession from '../screens/AIInterviewScreens/PracticeSession';
 import Feedback from '../screens/AIInterviewScreens/Feedback';
+import IntroScreen from '../screens/AICareerCoachScreens/IntroScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -110,12 +111,41 @@ const AppStack = () => {
       <Stack.Screen name="EditSkills" component={EditSkills} />
       <Stack.Screen name="SkillsForm" component={SkillsForm} />
       <Stack.Screen name="EditResumeStyle" component={EditResumeStyle} />
-      <Stack.Screen name="GetStartScreen" component={GetStartScreen} options={{ headerShown: false }}/>
-      <Stack.Screen name="InterviewStepOne" component={InterviewStepOne} options={{ headerShown: false }}/>
-      <Stack.Screen name="InterviewStepTwo" component={InterviewStepTwo} options={{ headerShown: false }}/>
-      <Stack.Screen name="InterviewStepThree" component={InterviewStepThree} options={{ headerShown: false }}/>
-      <Stack.Screen name="PracticeSession" component={PracticeSession} options={{ headerShown: false }}/>
-      <Stack.Screen name="Feedback" component={Feedback} options={{ headerShown: false }}/>
+      <Stack.Screen
+        name="GetStartScreen"
+        component={GetStartScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="InterviewStepOne"
+        component={InterviewStepOne}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="InterviewStepTwo"
+        component={InterviewStepTwo}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="InterviewStepThree"
+        component={InterviewStepThree}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PracticeSession"
+        component={PracticeSession}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Feedback"
+        component={Feedback}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="IntroScreen"
+        component={IntroScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

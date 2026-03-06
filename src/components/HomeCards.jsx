@@ -38,6 +38,12 @@ const DATA = [
     bg: '#88d2cc',
     navigation: 'GetStartScreen',
   },
+  {
+    title: 'AI Career Coach',
+    subtitle: 'Get AI Career Coach',
+    bg: '#7990e8',
+    navigation: 'IntroScreen',
+  },
 ];
 
 const HomeCards = ({ navigation }) => {

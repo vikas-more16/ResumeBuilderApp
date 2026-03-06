@@ -36,6 +36,12 @@ const DATA = [
     navigation: 'GetStartScreen',
   },
   {
+    title: 'AI Career Coach',
+    subtitle: 'Get  AI Career Coach',
+    bg: '#9d70e6',
+    navigation: 'IntroScreen',
+  },
+  {
     title: 'Your Credentials, Secured and Ready',
     subtitle: 'Store, share and verify your digital credentials seamlessly',
     bg: '#285c74',
