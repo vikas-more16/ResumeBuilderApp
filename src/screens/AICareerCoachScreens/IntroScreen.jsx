@@ -79,10 +79,10 @@ const IntroScreen = ({ navigation }) => {
               <Icon name="arrow-back" size={20} color="#1A1A1A" />
             </TouchableOpacity>
             <View style={styles.pillContainer}>
-              <MaterialCommunityIcons
-                name="star-four-points"
-                size={16}
-                color="#B35BFF"
+              <Image
+                source={require('../../assets/Sparkle.png')}
+                style={{ width: 16, height: 16 }}
+                resizeMode="contain"
               />
               <Text style={styles.pillText}>AI Career Coach</Text>
             </View>

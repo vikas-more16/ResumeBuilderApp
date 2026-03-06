@@ -7,6 +7,7 @@ import {
   ScrollView,
   Dimensions,
   Platform,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,37 +19,32 @@ const CAREER_OPTIONS = [
   {
     id: 'school',
     title: 'School Student\n(Class 8-10)',
-    emoji: '🎒',
-    bgColor: '#EEEEFF',
-    iconBgColor: '#DEE0FF',
+    image: require('../../assets/AICareerCoach/SchoolStudent.png'),
+    bgColor: '#E5E7FF',
   },
   {
     id: 'senior_school',
     title: 'Senior School\nStudent (Class 11-12)',
-    emoji: '🏫',
-    bgColor: '#E6F9EC',
-    iconBgColor: '#BCE8CC',
+    image: require('../../assets/AICareerCoach/School.png'),
+    bgColor: '#E0FBE7',
   },
   {
     id: 'college',
     title: 'College\nStudent',
-    emoji: '👩‍🎓',
-    bgColor: '#FFFBE6',
-    iconBgColor: '#F5EDB2',
+    image: require('../../assets/AICareerCoach/CollegeStudent.png'),
+    bgColor: '#FFFAE6',
   },
   {
     id: 'professional',
     title: 'Working\nProfessional',
-    emoji: '👩‍💻',
-    bgColor: '#FCEBFF',
-    iconBgColor: '#F2C6F9',
+    image: require('../../assets/AICareerCoach/WorkingProfessional.png'),
+    bgColor: '#FFE3FD',
   },
   {
     id: 'exploring',
     title: 'Exploring Career\nChange',
-    emoji: '💼',
-    bgColor: '#EEEEFF',
-    iconBgColor: '#DEE0FF',
+    image: require('../../assets/AICareerCoach/ExploreCarearChange.png'),
+    bgColor: '#E9E0FE',
   },
 ];
 
@@ -63,84 +59,84 @@ const CurrentStage = ({ navigation }) => {
         key={option.id}
         activeOpacity={0.8}
         onPress={() => setSelectedOption(option.id)}
-        style={[
-          styles.card,
-          { backgroundColor: option.bgColor },
-          isSelected && styles.selectedCard,
-        ]}
+        style={[styles.cardOuter, isSelected && styles.selectedCardOuter]}
       >
-        <View
-          style={[styles.iconWrapper, { backgroundColor: option.iconBgColor }]}
-        >
-          <Text style={styles.emojiText}>{option.emoji}</Text>
+        <View style={[styles.cardInner, { backgroundColor: option.bgColor }]}>
+          <View style={styles.iconWrapper}>
+            <Image
+              source={option.image}
+              style={styles.cardImage}
+              resizeMode="contain"
+            />
+          </View>
+          <Text style={styles.cardTitle}>{option.title}</Text>
         </View>
-        <Text style={styles.cardTitle}>{option.title}</Text>
       </TouchableOpacity>
     );
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.canGoBack() && navigation.goBack()}
-            activeOpacity={0.7}
+      <LinearGradient
+        colors={['#ECE7FF', '#FFFFFF', '#FFFFFF']}
+        locations={[0, 0.35, 1]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.container}
+      >
+        <View style={styles.innerContainer}>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.canGoBack() && navigation.goBack()}
+              activeOpacity={0.7}
+            >
+              <Icon name="arrow-back" size={20} color="#1A1A1A" />
+            </TouchableOpacity>
+
+            <View style={styles.pillContainer}>
+              <Text style={styles.stepText}>🌟 Step 1 of 3</Text>
+            </View>
+          </View>
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            bounces={false}
           >
-            <Icon name="arrow-back" size={24} color="#1A1A1A" />
-          </TouchableOpacity>
+            {/* Title & Subtitle */}
+            <View style={styles.titleContainer}>
+              <Text style={styles.titleText}>
+                Where Are You In Your{'\n'}Career Journey?
+              </Text>
+            </View>
 
-          <View style={styles.pillContainer}>
-            <Text style={styles.stepText}>🌟 Step 1 of 3</Text>
-          </View>
+            {/* Cards Grid */}
+            <View style={styles.gridContainer}>
+              <Text style={styles.subtitleText}>
+                Choose the option that best describes you.
+              </Text>
+              {CAREER_OPTIONS.map(renderOption)}
+            </View>
+          </ScrollView>
 
-          <View style={{ width: 44 }} />
-        </View>
-
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          bounces={false}
-        >
-          {/* Title & Subtitle */}
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>
-              Where Are You In Your{'\n'}Career Journey?
-            </Text>
-            <Text style={styles.subtitleText}>
-              Choose the option that best describes you.
-            </Text>
-          </View>
-
-          {/* Cards Grid */}
-          <View style={styles.gridContainer}>
-            {CAREER_OPTIONS.map(renderOption)}
-          </View>
-        </ScrollView>
-
-        {/* Bottom Section */}
-        <View style={styles.bottomSection}>
+          {/* Bottom Section */}
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.buttonShadowWrapper}
             onPress={() => navigation.navigate('AboutStage')}
-            
           >
             <LinearGradient
-              colors={['#FF6B6B', '#FF8A6E']}
+              colors={['#FF6652', '#FF6F61']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={styles.button}
             >
-              <Text style={styles.buttonText}>
-                Next
-              </Text>
+              <Text style={styles.buttonText}>Next</Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>
-      </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
@@ -150,11 +146,14 @@ export default CurrentStage;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F7F4FF', // Light purple-ish background similar to the image
+    backgroundColor: '#ECE7FF',
   },
   container: {
     flex: 1,
-    backgroundColor: '#F7F4FF',
+  },
+  innerContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: 'row',
@@ -165,34 +164,26 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 2,
   },
   pillContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 2,
+    paddingHorizontal: 10,
+    paddingVertical: 9,
+    borderRadius: 10,
   },
   stepText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: '#4A4A4A',
   },
   scrollContent: {
@@ -202,76 +193,74 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     marginTop: 20,
-    marginBottom: 30,
+    marginBottom: 25,
     alignItems: 'center',
   },
   titleText: {
-    fontSize: 26,
-    fontWeight: '800',
+    fontSize: 30,
+    fontWeight: '700',
     color: '#1A1A1A',
     textAlign: 'center',
-    lineHeight: 34,
+    lineHeight: 40,
     marginBottom: 10,
   },
   subtitleText: {
     fontSize: 15,
     color: '#6B6B7A',
     textAlign: 'center',
+    marginBottom: 16,
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  card: {
+  cardOuter: {
     width: (width - 55) / 2, // 2 columns, 20 padding each side, 15 space between
-    paddingVertical: 24,
-    paddingHorizontal: 12,
     borderRadius: 16,
     marginBottom: 15,
-    alignItems: 'center',
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: 'transparent',
+    padding: 3, // 2px gap (adjusting slightly so it is more visibly matched to CSS logic)
+    backgroundColor: 'transparent',
   },
-  selectedCard: {
-    borderColor: '#FF6B6B', // The orange/red selection border
+  selectedCardOuter: {
+    borderColor: '#FF6B6B', // The 1px red outer border
+    backgroundColor: '#FFFFFF', // The white continuous inner gap
+  },
+  cardInner: {
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    borderRadius: 13,
+    alignItems: 'center',
   },
   iconWrapper: {
-    width: 50,
-    height: 50,
-    borderRadius: 20, // To give it an organic squircle/blob feel
+    width: 60,
+    height: 60,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
   },
-  emojiText: {
-    fontSize: 24,
+  cardImage: {
+    width: '100%',
+    height: '100%',
   },
   cardTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '500',
     color: '#1A1A1A',
     textAlign: 'center',
     lineHeight: 20,
   },
-  bottomSection: {
-    paddingHorizontal: 20,
-    paddingBottom: Platform.OS === 'ios' ? 10 : 30,
-    paddingTop: 10,
-    backgroundColor: '#F7F4FF',
-  },
   buttonShadowWrapper: {
     shadowColor: '#FF6B6B',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 30,
-    marginBottom: 10,
+    marginBottom: 30,
+    marginHorizontal: 30,
   },
   button: {
     borderRadius: 30,
-    paddingVertical: 16,
+    paddingVertical: 9,
     alignItems: 'center',
     justifyContent: 'center',
   },
