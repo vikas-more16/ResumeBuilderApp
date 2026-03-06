@@ -32,6 +32,11 @@ import InterviewStepThree from '../screens/AIInterviewScreens/InterviewStepThree
 import PracticeSession from '../screens/AIInterviewScreens/PracticeSession';
 import Feedback from '../screens/AIInterviewScreens/Feedback';
 import IntroScreen from '../screens/AICareerCoachScreens/IntroScreen';
+import CurrentStage from '../screens/AICareerCoachScreens/CurrentStage';
+import AboutStage from '../screens/AICareerCoachScreens/AboutStage';
+import Interests from '../screens/AICareerCoachScreens/Interests';
+import AssessmentTest from '../screens/AICareerCoachScreens/AssessmentTest';
+import AssessmentReport from '../screens/AICareerCoachScreens/AssessmentReport';
 
 const Stack = createNativeStackNavigator();
 
@@ -144,6 +149,31 @@ const AppStack = () => {
       <Stack.Screen
         name="IntroScreen"
         component={IntroScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CurrentStage"
+        component={CurrentStage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AboutStage"
+        component={AboutStage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Interests"
+        component={Interests}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AssessmentTest"
+        component={AssessmentTest}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AssessmentReport"
+        component={AssessmentReport}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
