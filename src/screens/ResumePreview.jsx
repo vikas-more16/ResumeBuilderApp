@@ -102,7 +102,7 @@ const ResumePreview = ({ route }) => {
   }
 
   const defaultText = 'UTKAL UNIVERSITY';
-  const fontSize = 40;
+  const fontSize = 20;
 
   const { rows, columns, lineHeightPx, horizontalSpacingPreview } =
     calculateGrid(defaultText, fontSize);
@@ -124,7 +124,7 @@ const ResumePreview = ({ route }) => {
     rowOverrides: [
       { index: 15, text: resume.personalInfo?.firstName || 'STUDENT_NAME' },
       { index: 25, text: resume.education?.[0]?.program || 'COURSE_NAME' },
-      { index: 40, text: resume.personalInfo?.phone || 'PHONE_NO' },
+      { index: 65, text: resume.personalInfo?.phone || 'PHONE_NO' },
     ],
 
     colOverrides: [],
