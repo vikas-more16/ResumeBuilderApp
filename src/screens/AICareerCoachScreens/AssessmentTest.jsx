@@ -12,29 +12,28 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import { questions } from '../../utils/CareerCoachQuestions';
 
 const { width } = Dimensions.get('window');
 
-const QUESTIONS = Array.from({ length: 5 }).map((_, i) => ({
-  id: i + 1,
-  question: 'What type of task do you prefer?',
+const QUESTIONS = questions.questions.map(q => ({
+  id: q.number,
+  question: q.question,
   options: [
     {
       id: 'A',
-      text: 'Write everything properly and keep tidy',
-      image: require('../../assets/AICareerCoach/OptionA.png'),
+      text: q.options.A.text,
+      image: q.options.A.image,
     },
     {
       id: 'B',
-      text: 'Use machines to make or build something',
-      image: require('../../assets/AICareerCoach/OptionB.png'),
+      text: q.options.B.text,
+      image: q.options.B.image,
     },
   ],
 }));
 
-const AssessmentTest = () => {
-  const navigation = useNavigation();
+const AssessmentTest = ({ navigation }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -131,9 +130,8 @@ const AssessmentTest = () => {
                     />
                     <Text style={styles.starText}>{option.id}</Text>
                   </View>
-
                   <Image
-                    source={option.image}
+                    source={{ uri: option.image }}
                     style={styles.optionImage}
                     resizeMode="cover"
                   />
