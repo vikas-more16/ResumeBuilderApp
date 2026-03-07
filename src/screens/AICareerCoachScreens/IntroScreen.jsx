@@ -5,7 +5,6 @@ import {
   View,
   Image,
   TouchableOpacity,
-  ScrollView,
   Dimensions,
   Platform,
   Animated,

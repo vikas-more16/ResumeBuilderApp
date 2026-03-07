@@ -4,6 +4,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Image,
   ScrollView,
   Dimensions,
   Platform,
@@ -15,21 +16,81 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const { width } = Dimensions.get('window');
 
 const INTEREST_OPTIONS = [
-  { id: 'tech', title: 'Technology and\nInnovation', emoji: '💻🚀' },
-  { id: 'engineering', title: 'Engineering and\nManufacturing', emoji: '⚙️🛠' },
-  { id: 'healthcare', title: 'Healthcare and\nMedical Services', emoji: '❤️💊' },
-  { id: 'business', title: 'Business Strategy &\nEntrepreneurship', emoji: '💼💡' },
-  { id: 'management', title: 'Management and\nOperations', emoji: '📋📚' },
-  { id: 'finance', title: 'Finance and\nAccounting', emoji: '💵🪙' },
-  { id: 'sales', title: 'Sales, Marketing &\nCommunications', emoji: '🎯📣' },
-  { id: 'creative', title: 'Creative Arts &\nDesign', emoji: '🎨🖌' },
-  { id: 'media', title: 'Media, Entertainment\n& Performing Arts', emoji: '🎬✨' },
-  { id: 'education', title: 'Education and\nTraining', emoji: '🎓📚' },
-  { id: 'social', title: 'Social Services &\nCommunity\nDevelopment', emoji: '🤝📋' },
-  { id: 'law', title: 'Law, Governance &\nPublic Administration', emoji: '⚖️🏛' },
-  { id: 'science', title: 'Science and\nResearch', emoji: '🔬🧑‍🔬' },
-  { id: 'environment', title: 'Environment, Agri &\nNatural Resources', emoji: '🌍🌱' },
-  { id: 'trade', title: 'Trade, Construction\n& Technical Services', emoji: '🧰🏗' },
+  {
+    id: 'tech',
+    title: 'Technology and\nInnovation',
+    image: require('../../assets/AICareerCoach/Interests/tech.png'),
+  },
+  {
+    id: 'engineering',
+    title: 'Engineering and\nManufacturing',
+    image: require('../../assets/AICareerCoach/Interests/engineering.png'),
+  },
+  {
+    id: 'healthcare',
+    title: 'Healthcare and\nMedical Services',
+    image: require('../../assets/AICareerCoach/Interests/healthcare.png'),
+  },
+  {
+    id: 'business',
+    title: 'Business Strategy &\nEntrepreneurship',
+    image: require('../../assets/AICareerCoach/Interests/business.png'),
+  },
+  {
+    id: 'management',
+    title: 'Management and\nOperations',
+    image: require('../../assets/AICareerCoach/Interests/management.png'),
+  },
+  {
+    id: 'finance',
+    title: 'Finance and\nAccounting',
+    image: require('../../assets/AICareerCoach/Interests/finance.png'),
+  },
+  {
+    id: 'sales',
+    title: 'Sales, Marketing &\nCommunications',
+    image: require('../../assets/AICareerCoach/Interests/sales.png'),
+  },
+  {
+    id: 'creative',
+    title: 'Creative Arts &\nDesign',
+    image: require('../../assets/AICareerCoach/Interests/creative.png'),
+  },
+  {
+    id: 'media',
+    title: 'Media, Entertainment\n& Performing Arts',
+    image: require('../../assets/AICareerCoach/Interests/media.png'),
+  },
+  {
+    id: 'education',
+    title: 'Education and\nTraining',
+    image: require('../../assets/AICareerCoach/Interests/education.png'),
+  },
+  {
+    id: 'social',
+    title: 'Social Services &\nCommunity\nDevelopment',
+    image: require('../../assets/AICareerCoach/Interests/social.png'),
+  },
+  {
+    id: 'law',
+    title: 'Law, Governance &\nPublic Administration',
+    image: require('../../assets/AICareerCoach/Interests/law.png'),
+  },
+  {
+    id: 'science',
+    title: 'Science and\nResearch',
+    image: require('../../assets/AICareerCoach/Interests/science.png'),
+  },
+  {
+    id: 'environment',
+    title: 'Environment, Agri &\nNatural Resources',
+    image: require('../../assets/AICareerCoach/Interests/environment.png'),
+  },
+  {
+    id: 'trade',
+    title: 'Trade, Construction\n& Technical Services',
+    image: require('../../assets/AICareerCoach/Interests/trade.png'),
+  },
 ];
 
 const Interests = ({ navigation }) => {
@@ -43,7 +104,7 @@ const Interests = ({ navigation }) => {
       if (prev.length < 3) {
         return [...prev, id];
       }
-      return prev; // If already 3, don't add more (unless you want toast notification)
+      return prev;
     });
   };
 
@@ -59,8 +120,8 @@ const Interests = ({ navigation }) => {
         style={[styles.card, isSelected && styles.selectedCard]}
       >
         <Text style={styles.cardTitle}>{option.title}</Text>
-        <View style={styles.emojiContainer}>
-          <Text style={styles.emojiText}>{option.emoji}</Text>
+        <View style={styles.pngContainer}>
+          <Image source={option.image} style={styles.pngImage} />
         </View>
 
         {/* Selected Badge */}
@@ -75,54 +136,57 @@ const Interests = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.canGoBack() && navigation.goBack()}
-            activeOpacity={0.7}
-          >
-            <Icon name="arrow-back" size={24} color="#1A1A1A" />
-          </TouchableOpacity>
+      <LinearGradient
+        colors={['#ECE7FF', '#FFFFFF', '#FFFFFF']}
+        locations={[0, 0.35, 1]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.container}
+      >
+        <View style={styles.innerContainer}>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.canGoBack() && navigation.goBack()}
+              activeOpacity={0.7}
+            >
+              <Icon name="arrow-back" size={20} color="#1A1A1A" />
+            </TouchableOpacity>
 
-          <View style={styles.pillContainer}>
-            <Text style={styles.stepText}>🌟 Step 3 of 3</Text>
+            <View style={styles.pillContainer}>
+              <Text style={styles.stepText}>🌟 Step 3 of 3</Text>
+            </View>
           </View>
-
-          <View style={{ width: 44 }} />
-        </View>
-
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
           {/* Title Section */}
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>
               What Interests You The{'\n'}Most?
             </Text>
-            <Text style={styles.subtitleText}>
-              Select your top 3 interests in order
-            </Text>
           </View>
+          {/* Subtitle */}
+          <Text style={styles.subtitleText}>
+            Select your top 3 interests in order
+          </Text>
 
-          {/* Grid Layout */}
-          <View style={styles.gridContainer}>
-            {INTEREST_OPTIONS.map(renderOption)}
-          </View>
-        </ScrollView>
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Grid Layout */}
+            <View style={styles.gridContainer}>
+              {INTEREST_OPTIONS.map(renderOption)}
+            </View>
+          </ScrollView>
 
-        {/* Bottom Section */}
-        <View style={styles.bottomSection}>
+          {/* Bottom Section */}
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.buttonShadowWrapper}
             onPress={() => navigation.navigate('AssessmentTest')}
-           
           >
             <LinearGradient
-              colors={['#FF6B6B', '#FF8A6E']}
+              colors={['#FF6652', '#FF6F61']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={styles.button}
@@ -131,7 +195,7 @@ const Interests = ({ navigation }) => {
             </LinearGradient>
           </TouchableOpacity>
         </View>
-      </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
@@ -141,11 +205,14 @@ export default Interests;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FDFBFF', // Matches very light background from the screenshot design
+    backgroundColor: '#ECE7FF',
   },
   container: {
     flex: 1,
-    backgroundColor: '#FDFBFF',
+  },
+  innerContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: 'row',
@@ -156,34 +223,26 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 2,
   },
   pillContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 2,
+    paddingHorizontal: 10,
+    paddingVertical: 9,
+    borderRadius: 10,
   },
   stepText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '400',
     color: '#4A4A4A',
   },
   scrollContent: {
@@ -192,22 +251,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   titleContainer: {
-    marginTop: 15,
-    marginBottom: 25,
-    alignItems: 'center', // Image is centered
+    marginTop: 20,
+    marginBottom: 20,
+    alignItems: 'center',
   },
   titleText: {
-    fontSize: 26,
-    fontWeight: '800',
+    fontSize: 30,
+    fontWeight: '700',
     color: '#1A1A1A',
     textAlign: 'center',
-    lineHeight: 34,
-    marginBottom: 8,
+    marginBottom: 10,
   },
   subtitleText: {
     fontSize: 14,
     color: '#6B6B7A',
-    textAlign: 'center',
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
   gridContainer: {
     flexDirection: 'row',
@@ -216,7 +275,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: (width - 55) / 2, // 2 columns, 20px padding left/right, 15px gap
-    backgroundColor: '#F8F9FB', // Light card tint
+    backgroundColor: '#f3f7fe', // Light card tint
     borderRadius: 12,
     padding: 14,
     marginBottom: 15,
@@ -230,19 +289,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF5F5', // Optional sub-hue
   },
   cardTitle: {
-    fontSize: 12.5,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '500',
     color: '#1A1A1A',
     lineHeight: 18,
     flex: 1,
   },
-  emojiContainer: {
+  pngContainer: {
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
     marginTop: 10,
   },
-  emojiText: {
-    fontSize: 26,
+  pngImage: {
+    width: 70,
+    height: 70,
+    resizeMode: 'contain',
   },
   badge: {
     position: 'absolute',
@@ -260,24 +321,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
   },
-  bottomSection: {
-    paddingHorizontal: 20,
-    paddingBottom: Platform.OS === 'ios' ? 10 : 30,
-    paddingTop: 10,
-    backgroundColor: '#FDFBFF',
-  },
   buttonShadowWrapper: {
     shadowColor: '#FF6B6B',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 30,
-    marginBottom: 10,
+    marginBottom: 30,
+    marginHorizontal: 30,
   },
   button: {
     borderRadius: 30,
-    paddingVertical: 16,
+    paddingVertical: 9,
     alignItems: 'center',
     justifyContent: 'center',
   },
