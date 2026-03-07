@@ -16,7 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
-const QUESTIONS = Array.from({ length: 30 }).map((_, i) => ({
+const QUESTIONS = Array.from({ length: 5 }).map((_, i) => ({
   id: i + 1,
   question: 'What type of task do you prefer?',
   options: [
@@ -43,11 +43,13 @@ const AssessmentTest = () => {
 
   const handleSelectOption = optionId => {
     setSelectedOption(optionId);
-    if (!isLastQuestion) {
-      setTimeout(() => {
-        setCurrentStep(prev => prev + 1);
-        setSelectedOption(null);
-      }, 200);
+  };
+  const handleNext = () => {
+    if (isLastQuestion) {
+      navigation.navigate('AssessmentReport');
+    } else {
+      setCurrentStep(prev => prev + 1);
+      setSelectedOption(null);
     }
   };
 
@@ -149,30 +151,26 @@ const AssessmentTest = () => {
             })}
           </View>
 
-          {/* Conditional Submit Button for Final Question */}
-          {isLastQuestion && (
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={[
-                styles.buttonShadowWrapper,
-                !selectedOption && styles.buttonDisabled,
-              ]}
-              onPress={
-                selectedOption
-                  ? () => navigation.navigate('AssessmentReport')
-                  : null
-              }
+          {/* Next / Submit Button */}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={[
+              styles.buttonShadowWrapper,
+              !selectedOption && styles.buttonDisabled,
+            ]}
+            onPress={selectedOption ? handleNext : null}
+          >
+            <LinearGradient
+              colors={['#FF6652', '#FF6F61']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.button}
             >
-              <LinearGradient
-                colors={['#FF6652', '#FF6F61']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>Submit Test</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          )}
+              <Text style={styles.buttonText}>
+                {isLastQuestion ? 'Submit Test' : 'Next'}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </ScrollView>
       </LinearGradient>
     </SafeAreaView>
@@ -378,6 +376,7 @@ const styles = StyleSheet.create({
 
   button: {
     borderRadius: 30,
+    marginTop: 20,
     paddingVertical: 9,
     alignItems: 'center',
     justifyContent: 'center',
