@@ -12,8 +12,8 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
 import Svg, { Polygon, Line } from 'react-native-svg';
+import { Report } from '../../utils/CareerCoachReport';
 
 const { width } = Dimensions.get('window');
 
@@ -24,8 +24,8 @@ const TAB_OPTIONS = [
   { id: 'protips', title: 'Pro Tips', icon: '💡' },
 ];
 
-const AssessmentReport = () => {
-  const navigation = useNavigation();
+const AssessmentReport = ({ navigation }) => {
+  const [expandedFuture, setExpandedFuture] = useState(false);
   const [activeTab, setActiveTab] = useState('personality');
 
   const renderHeader = () => (
@@ -52,7 +52,7 @@ const AssessmentReport = () => {
         </View>
 
         <Text style={styles.headerTitle}>
-          Tejpratap, Your Creativity is{'\n'}Magic!
+          {Report.student_name} , {Report.hero_subtitle}
         </Text>
       </ImageBackground>
 
@@ -61,15 +61,21 @@ const AssessmentReport = () => {
         <Text style={styles.hollandTitle}>YOUR HOLLAND CODE</Text>
         <View style={styles.hollandRow}>
           <View style={styles.hollandItem}>
-            <Text style={styles.hollandLetter}>A</Text>
+            <Text style={styles.hollandLetter}>
+              {Report.riasec_code.charAt(0)}
+            </Text>
             <Text style={styles.hollandLabel}>Primary</Text>
           </View>
           <View style={styles.hollandItem}>
-            <Text style={styles.hollandLetter}>S</Text>
+            <Text style={styles.hollandLetter}>
+              {Report.riasec_code.charAt(1)}
+            </Text>
             <Text style={styles.hollandLabel}>Secondary</Text>
           </View>
           <View style={styles.hollandItem}>
-            <Text style={styles.hollandLetter}>E</Text>
+            <Text style={styles.hollandLetter}>
+              {Report.riasec_code.charAt(2)}
+            </Text>
             <Text style={styles.hollandLabel}>Tertiary</Text>
           </View>
         </View>
@@ -106,28 +112,45 @@ const AssessmentReport = () => {
 
   const renderPersonalityTab = () => (
     <View style={styles.tabContent}>
-      <Text style={styles.introText}>
-        Holland code blends S, A and E indicating that your artistic, social and
-        enterprising strengths move your hopes forward!
-      </Text>
+      <Text style={styles.introText}>{Report.hype_intro}</Text>
 
       <LinearGradient
         colors={['#7CE1FA', '#D9FAFF']}
         style={styles.futureSelfBanner}
       >
         <View style={styles.bannerRow}>
-          <View style={styles.futureSelfIcon}>
-            <Text style={{ fontSize: 24 }}>🚀</Text>
-          </View>
+          {/* PNG Icon */}
+          <Image
+            source={require('../../assets/AICareerCoach/future_visualization.png')}
+            style={styles.futureIcon}
+            resizeMode="contain"
+          />
+
+          {/* Text Content */}
           <View style={{ flex: 1 }}>
             <Text style={styles.futureSelfTitle}>
               Imagine Your Future Self ✨
             </Text>
-            <Text style={styles.futureSelfSub}>
-              A glimpse into the amazing future you are building.
+
+            <Text
+              style={styles.futureSelfSub}
+              numberOfLines={expandedFuture ? undefined : 2}
+            >
+              {Report.future_visualization}
             </Text>
           </View>
-          <Icon name="chevron-forward" size={20} color="#333" />
+
+          {/* Expand Button */}
+          <TouchableOpacity
+            onPress={() => setExpandedFuture(!expandedFuture)}
+            style={styles.arrowButton}
+          >
+            <Icon
+              name={expandedFuture ? 'chevron-up' : 'arrow-forward'}
+              size={20}
+              color="#333"
+            />
+          </TouchableOpacity>
         </View>
       </LinearGradient>
 
@@ -228,28 +251,38 @@ const AssessmentReport = () => {
         </Text>
       </View>
 
-      <Text style={styles.sectionTitle}>Your Personality Breakdown</Text>
+      <Text style={styles.personalityBreakdown}>
+        Your Personality Breakdown
+      </Text>
       <View style={styles.breakdownRow}>
-        <View style={[styles.breakdownBox, { backgroundColor: '#EBF4FF' }]}>
-          <Text style={{ fontSize: 24 }}>🎨</Text>
-          <Text style={[styles.breakdownTitle, { color: '#3B82F6' }]}>
-            Artistic
+        <View style={[styles.breakdownBox, { backgroundColor: '#E9F0FF' }]}>
+          <Text style={{ fontSize: 24 }}>
+            {Report.top_3_riasec_explanations[0].emoji}
           </Text>
-          <Text style={styles.breakdownSub}>"The Creator"</Text>
+          <Text style={[styles.breakdownTitle]}>Artistic</Text>
+          <Text style={[styles.breakdownSub, { color: '#427EFF' }]}>
+            "The Creator"
+          </Text>
         </View>
-        <View style={[styles.breakdownBox, { backgroundColor: '#FFF7ED' }]}>
-          <Text style={{ fontSize: 24 }}>🤝</Text>
-          <Text style={[styles.breakdownTitle, { color: '#F59E0B' }]}>
-            Social
+        <View style={[styles.breakdownBox, { backgroundColor: '#FFF8EA' }]}>
+          <Text style={{ fontSize: 24 }}>
+            {' '}
+            {Report.top_3_riasec_explanations[1].emoji}
           </Text>
-          <Text style={styles.breakdownSub}>"The Helper"</Text>
+          <Text style={[styles.breakdownTitle]}>Social</Text>
+          <Text style={[styles.breakdownSub, { color: '#EBA825' }]}>
+            "The Helper"
+          </Text>
         </View>
-        <View style={[styles.breakdownBox, { backgroundColor: '#FCE7F3' }]}>
-          <Text style={{ fontSize: 24 }}>🚀</Text>
-          <Text style={[styles.breakdownTitle, { color: '#EC4899' }]}>
-            Enterprising
+        <View style={[styles.breakdownBox, { backgroundColor: '#F4E6FF' }]}>
+          <Text style={{ fontSize: 24 }}>
+            {' '}
+            {Report.top_3_riasec_explanations[2].emoji}
           </Text>
-          <Text style={styles.breakdownSub}>"The Persuader"</Text>
+          <Text style={styles.breakdownTitle}>Enterprising</Text>
+          <Text style={[styles.breakdownSub, { color: '#9C44E7' }]}>
+            "The Persuader"
+          </Text>
         </View>
       </View>
 
@@ -721,13 +754,15 @@ const AssessmentReport = () => {
 
   return (
     <View style={styles.container}>
-      {renderHeader()}
-      {renderTabs()}
-
       <ScrollView
         contentContainerStyle={styles.scrollArea}
         showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={[1]}
+        bounces={false}
       >
+        {renderHeader()}
+        {renderTabs()}
+
         {activeTab === 'personality' && renderPersonalityTab()}
         {activeTab === 'streams' && renderStreamsTab()}
         {activeTab === 'roadmap' && renderRoadmapTab()}
@@ -786,7 +821,7 @@ const styles = StyleSheet.create({
     borderColor: '#FFFFFF',
     marginTop: 10,
     paddingHorizontal: 16,
-    marginLeft:20,
+    marginLeft: 20,
     paddingVertical: 6,
     borderRadius: 20,
   },
@@ -856,8 +891,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   tabsWrapper: {
-    marginVertical: 10,
+    backgroundColor: '#FAFAFB',
+    paddingVertical: 10,
     paddingLeft: 20,
+    zIndex: 10,
   },
   tabsContainer: {
     paddingRight: 40,
@@ -902,35 +939,46 @@ const styles = StyleSheet.create({
   },
   futureSelfBanner: {
     borderRadius: 16,
-    padding: 16,
-    marginBottom: 25,
   },
+
   bannerRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingRight: 10,
   },
-  futureSelfIcon: {
-    width: 40,
-    height: 40,
-    backgroundColor: '#FFF',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
+
+  futureIcon: {
+    width: 100,
+    height: 100,
+    marginRight: 1,
   },
+
   futureSelfTitle: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '700',
-    color: '#111827',
-    marginBottom: 2,
+    color: '#1F2937',
+    marginBottom: 4,
   },
+
   futureSelfSub: {
-    fontSize: 12,
-    color: '#374151',
+    fontSize: 13,
+    color: '#4B5563',
+    lineHeight: 18,
+  },
+
+  arrowButton: {
+    paddingLeft: 10,
+  },
+  personalityBreakdown: {
+    marginTop: 1,
+    fontSize: 22,
+    color: '#6B7280',
+    marginBottom: 30,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '800',
+    marginTop: 15,
+    fontSize: 22,
+    fontWeight: '500',
     color: '#111827',
     marginBottom: 15,
   },
