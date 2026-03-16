@@ -8,28 +8,6 @@ export const Report = {
     "future_visualization": "Imagine walking down the halls of a bustling tech firm in Mumbai, where your creative solutions are transforming industries. You’re leading a team that innovates at the intersection of art and tech, designing breathtaking virtual realities that captivate millions. You’ve patented a new tech gadget that’s revolutionized the way people interact with technology, earning you accolades and industry recognition. Your days are filled with brainstorming sessions, creative workshops, and hands-on projects that keep you buzzing with excitement.",
     "top_3_riasec_explanations": [
         {
-            "code": "E",
-            "name": "Enterprising",
-            "emoji": "🚀",
-            "vibe": "The Trailblazer",
-            "meaning": "You've got that fire! You're the one who starts things, rallies people, and makes things happen. CEOs, founders, and changemakers — they all share YOUR energy. When you walk into a room, things start moving.",
-            "traits": [
-                "Goal Crusher — you set targets and smash them",
-                "Influencer — you can sell an idea to anyone"
-            ],
-            "role_models": [
-                {
-                    "name": "Jeff Bezos",
-                    "achievement": "Built Amazon from a garage into a trillion-dollar company",
-                    "image_url": "https://storage.googleapis.com/aicareercoach/role-models/jeff-bezos.jpg"
-                }
-            ],
-            "inspiration_quote": {
-                "quote": "Your time is limited, don't waste it living someone else's life.",
-                "by": "Steve Jobs"
-            }
-        },
-        {
             "code": "A",
             "name": "Artistic",
             "emoji": "🎨",
@@ -43,7 +21,7 @@ export const Report = {
                 {
                     "name": "Frida Kahlo",
                     "achievement": "Turned personal pain into iconic and revolutionary art",
-                    "image_url": "https://storage.googleapis.com/aicareercoach/role-models/frida-kahlo.jpg"
+                    "image_url": require('../assets/AICareerCoach/zaha hadid.png'),
                 }
             ],
             "inspiration_quote": {
@@ -65,11 +43,32 @@ export const Report = {
                 {
                     "name": "James Dyson",
                     "achievement": "Built 5,000+ prototypes before perfecting his vacuum technology",
-                    "image_url": "https://storage.googleapis.com/aicareercoach/role-models/james-dyson.jpg"
+                    "image_url": require('../assets/AICareerCoach/zaha hadid.png')
                 }
             ],
             "inspiration_quote": {
                 "quote": "The only way to do great work is to love what you do.",
+                "by": "Steve Jobs"
+            }
+        }, {
+            "code": "E",
+            "name": "Enterprising",
+            "emoji": "🚀",
+            "vibe": "The Trailblazer",
+            "meaning": "You've got that fire! You're the one who starts things, rallies people, and makes things happen. CEOs, founders, and changemakers — they all share YOUR energy. When you walk into a room, things start moving.",
+            "traits": [
+                "Goal Crusher — you set targets and smash them",
+                "Influencer — you can sell an idea to anyone"
+            ],
+            "role_models": [
+                {
+                    "name": "Jeff Bezos",
+                    "achievement": "Built Amazon from a garage into a trillion-dollar company",
+                    "image_url": require('../assets/AICareerCoach/zaha hadid.png')
+                }
+            ],
+            "inspiration_quote": {
+                "quote": "Your time is limited, don't waste it living someone else's life.",
                 "by": "Steve Jobs"
             }
         }
@@ -205,7 +204,7 @@ export const Report = {
                 "IIIT Hyderabad",
                 "IIT Bombay",
                 "BITS Pilani",
-                "R.V. College of Engineering",
+                "R.V. College of Engineering",  
                 "VIT Vellore"
             ],
             "entrance_exams": [
